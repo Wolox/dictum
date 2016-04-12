@@ -1,0 +1,24 @@
+language: ruby
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1
+  - 2.2
+  - 2.2.4
+  - 2.3.0
+
+install:
+  - gem install bundler
+  - bundle install --retry=3
+
+script:
+  - bundle exec rspec
+  - bundle exec rubocop -R --format simple
+
+addons:
+    code_climate:
+        repo_token: f2595e3a0b6f5dcb7586e0f956747e711373819d96daaed13e4371ce089fc744
+
+os:
+  - linux
+  - osx
