@@ -1,10 +1,11 @@
 # Dictum - Document your Rails APIs
-[![Gem Version]()
-[![Dependency Status]()
-[![Build Status]()
-[![Code Climate]()
-[![Test Coverage]()
-[![Inline docs]()
+[![Gem Version](https://badge.fury.io/rb/dictum.svg)](https://badge.fury.io/rb/dictum)
+[![Dependency Status](https://gemnasium.com/badges/github.com/alebian/dictum.svg)](https://gemnasium.com/github.com/alebian/dictum)
+[![Build Status](https://travis-ci.org/alebian/dictum.svg)](https://travis-ci.org/alebian/dictum)
+[![Code Climate](https://codeclimate.com/github/alebian/dictum/badges/gpa.svg)](https://codeclimate.com/github/alebian/dictum)
+[![Test Coverage](https://codeclimate.com/github/alebian/dictum/badges/coverage.svg)](https://codeclimate.com/github/alebian/dictum/coverage)
+[![Issue Count](https://codeclimate.com/github/alebian/dictum/badges/issue_count.svg)](https://codeclimate.com/github/alebian/dictum)
+[![Inline docs](http://inch-ci.org/github/alebian/dictum.svg)](http://inch-ci.org/github/alebian/dictum)
 
 ## Installation
 
@@ -16,7 +17,7 @@ gem 'dictum'
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 Or install it yourself as:
 
@@ -24,7 +25,87 @@ Or install it yourself as:
 
 ## Usage
 
+First you need to set a configuration file inside /config/initializers/dictum.rb
 
+```ruby
+Dictum.configure do |config|
+  config.output_path = Rails.root.join('docs')
+  config.root_path = Rails.root
+  config.output_filename = 'Documentation'
+  # config.output_format = :markdown
+  # test_suite = :rspec
+end
+```
+
+Then you can start using Dictum in your tests:
+
+```ruby
+require 'rails_helper'
+
+describe V1::MyResourceController do
+  Dictum.resource(
+    name: 'MyResource',
+    description: 'This is MyResource description.'
+  )
+
+  describe '#some_method' do
+    context 'some context for my resource' do
+      it 'returns status ok' do
+        get :index
+        Dictum.endpoint(
+          resource: 'MyResource',
+          endpoint: '/api/v1/my_resource',
+          http_verb: 'GET',
+          description: 'Some description of the endpoint.',
+          request_headers: { 'AUTHORIZATION' => 'user_token',
+                             'Content-Type' => 'application/json',
+                             'Accept' => 'application/json' },
+          request_path_parameters: {},
+          request_body_parameters: {},
+          response_headers: {},
+          response_status: response.status,
+          response_body: response_body
+        )
+        expect(response_status).to eq(200)
+      end
+    end
+  end
+end
+```
+
+Then execute:
+
+    $ bundle exec dictum
+
+This will create a document like this:
+
+    # Index
+    - MyResource
+
+    # MyResource
+    This is MyResource description.
+
+    ## GET /api/v1/my_resource
+
+    ### Description:
+    Some description of the endpoint.
+
+    ### Request headers:
+    ```json
+    {
+      "AUTHORIZATION" : "user_token",
+      "Content-Type" : "application/json",
+      "Accept" : "application/json"
+    }
+    ```
+
+    ### Response status:
+    200
+
+    ### Response body:
+    ```json
+    "no_content"
+    ```
 
 ## Contributing
 

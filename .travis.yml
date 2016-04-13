@@ -17,8 +17,17 @@ script:
 
 addons:
     code_climate:
-        repo_token: f2595e3a0b6f5dcb7586e0f956747e711373819d96daaed13e4371ce089fc744
+        repo_token: 18ae4433a073ee0e00127ab95c826ac5552d3b14d712aa70a231e9e3903f84d5
 
 os:
   - linux
   - osx
+
+matrix:
+  exclude:
+    - rvm: 2.2
+      os: osx
+    - rvm: 2.2.4
+      os: osx
+    - rvm: 2.3.0
+      os: osx
