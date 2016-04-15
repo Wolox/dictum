@@ -1,41 +1,45 @@
+require 'json'
+
 module Dictum
   class MarkdownWriter
-    attr_reader :resources, :file, :path
+    attr_reader :temp_path, :temp_json, :output_path, :output_file
 
-    def initialize(path, resources)
-      @path = path
-      File.delete(path) if File.exist?(path)
-      @resources = resources
+    def initialize(output_path, temp_path)
+      @output_path = output_path
+      File.delete(output_path) if File.exist?(output_path)
+      @temp_path = temp_path
+      @temp_json = JSON.parse(File.read(temp_path))
     end
 
     def write
-      @file = File.open(path, 'a+')
+      @output_file = File.open(output_path, 'a+')
       write_index
-      write_resources
-      file.close
+      write_temp_path
+      output_file.close
+      File.delete(temp_path) if File.exist?(temp_path)
     end
 
     private
 
     def write_index
-      file.puts '# Index'
-      @resources.each do |resource_name, _information|
-        file.puts "- #{resource_name}"
+      output_file.puts '# Index'
+      @temp_json.each do |resource_name, _information|
+        output_file.puts "- #{resource_name}"
       end
-      file.puts "\n"
+      output_file.puts "\n"
     end
 
-    def write_resources
-      @resources.each do |resource_name, information|
-        file.puts "# #{resource_name}"
-        file.puts "#{information['description']}\n\n"
+    def write_temp_path
+      @temp_json.each do |resource_name, information|
+        output_file.puts "# #{resource_name}"
+        output_file.puts "#{information['description']}\n\n"
         write_endpoints(information['endpoints'])
       end
     end
 
     def write_endpoints(endpoints)
       endpoints.each do |endpoint|
-        file.puts "## #{endpoint['http_verb']} #{endpoint['endpoint']}\n\n"
+        output_file.puts "## #{endpoint['http_verb']} #{endpoint['endpoint']}\n\n"
         write_endpoint_description(endpoint)
         write_endpoint_response(endpoint)
       end
@@ -45,7 +49,7 @@ module Dictum
       print_subsubtitle('Description', endpoint['description'])
       print_subsubtitle_json('Request headers', endpoint['request_headers'])
       print_subsubtitle_json('Path parameters', endpoint['request_path_parameters'])
-      print_subsubtitle_json('Body Parameters', endpoint['request_parameters'])
+      print_subsubtitle_json('Body Parameters', endpoint['request_body_parameters'])
     end
 
     def write_endpoint_response(endpoint)
@@ -56,14 +60,14 @@ module Dictum
 
     def print_subsubtitle(subtitle, contents)
       return if !subtitle.present? || !contents.present?
-      file.puts "\#\#\# #{subtitle}:"
-      file.puts "#{contents}\n\n"
+      output_file.puts "\#\#\# #{subtitle}:"
+      output_file.puts "#{contents}\n\n"
     end
 
     def print_subsubtitle_json(subtitle, contents)
       return if !subtitle.present? || !contents.present?
-      file.puts "\#\#\# #{subtitle}:"
-      file.puts "```json\n#{JSON.pretty_generate(contents)}\n```\n\n"
+      output_file.puts "\#\#\# #{subtitle}:"
+      output_file.puts "```json\n#{JSON.pretty_generate(contents)}\n```\n\n"
     end
   end
 end

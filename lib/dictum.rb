@@ -3,10 +3,12 @@ require 'dictum/documenter'
 require 'dictum/markdown_writer'
 
 module Dictum
+  load 'tasks/dictum.rake' if defined?(Rails)
+
   @config = {
     output_format: :markdown,
-    output_path: "#{Dir.tmpdir}/docs",
-    root_path: Dir.tmpdir,
+    output_path: '/tmp/docs',
+    root_path: '/tmp',
     test_suite: :rspec,
     output_filename: 'Documentation'
   }
@@ -55,7 +57,7 @@ module Dictum
   def self.document
     Dir.mkdir(@config[:output_path]) unless Dir.exist?(@config[:output_path])
     Documenter.instance.reset_resources
-    system "bundle exec rspec #{@config[:root_path]} > /dev/null" if @config[:test_suite] == :rspec
+    system "bundle exec rspec #{@config[:root_path]}" if @config[:test_suite] == :rspec
     save_to_file
   end
 
@@ -63,8 +65,8 @@ module Dictum
     writer = nil
     case @config[:output_format]
     when :markdown
-      writer = MarkdownWriter.new(@config[:output_path].join("#{@config[:output_filename]}.md"),
-                                  JSON.parse(File.read(Documenter.instance.temp)))
+      writer = MarkdownWriter.new("#{@config[:output_path]}/#{@config[:output_filename]}.md",
+                                  Documenter.instance.tempfile_path)
     end
     writer.write
   end

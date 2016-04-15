@@ -6,11 +6,11 @@ module Dictum
   #
   class Documenter
     include Singleton
-    attr_reader :resources, :temp
+    attr_reader :resources, :tempfile_path
 
     def initialize
       @resources = {}
-      @temp = "#{Dir.tmpdir}/dictum_temp.json"
+      @tempfile_path = '/tmp/dictum_temp.json'
     end
 
     def resource(arguments = {})
@@ -33,14 +33,13 @@ module Dictum
 
     def reset_resources
       @resources = {}
-      File.delete(temp) if File.exist?(temp)
     end
 
     private
 
     def update_temp
-      File.delete(temp) if File.exist?(temp)
-      file = File.open(temp, 'w+')
+      File.delete(tempfile_path) if File.exist?(tempfile_path)
+      file = File.open(tempfile_path, 'w+')
       file.write(JSON.generate(@resources))
       file.close
     end

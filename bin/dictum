@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-
-require 'dictum'
-
-Dictum.document

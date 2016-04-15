@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake', '~> 11.1'
-gem 'rspec', '~> 3.4'
+gem 'json', '~> 1.8'
 
 group :test do
   gem 'codeclimate-test-reporter', require: false
