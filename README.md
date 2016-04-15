@@ -28,6 +28,7 @@ Or install it yourself as:
 First you need to set a configuration file inside /config/initializers/dictum.rb
 
 ```ruby
+# /config/initializers/dictum.rb
 Dictum.configure do |config|
   config.output_path = Rails.root.join('docs')
   config.root_path = Rails.root
@@ -37,9 +38,10 @@ Dictum.configure do |config|
 end
 ```
 
-Then you can start using Dictum in your tests:
+Then you can use Dictum in the most verbose and fully customizable way like this in your tests:
 
 ```ruby
+# spec/controllers/my_resource_controller_spec.rb
 require 'rails_helper'
 
 describe V1::MyResourceController do
@@ -54,15 +56,15 @@ describe V1::MyResourceController do
         get :index
         Dictum.endpoint(
           resource: 'MyResource',
-          endpoint: '/api/v1/my_resource',
-          http_verb: 'GET',
+          endpoint: '/api/v1/my_resource/:id',
+          http_verb: 'POST',
           description: 'Some description of the endpoint.',
           request_headers: { 'AUTHORIZATION' => 'user_token',
                              'Content-Type' => 'application/json',
                              'Accept' => 'application/json' },
-          request_path_parameters: {},
-          request_body_parameters: {},
-          response_headers: {},
+          request_path_parameters: { id: 1, page: 1 },
+          request_body_parameters: { some: 'parameter' },
+          response_headers: { 'some_header' => 'some_header_value' },
           response_status: response.status,
           response_body: response_body
         )
@@ -72,12 +74,89 @@ describe V1::MyResourceController do
   end
 end
 ```
+Most parameters are not mandatory, and as you can see, writing all of these for each endpoint can add a lot of unnecessary boilerplate. But since you know everything the method receives you can customize the usage anyway you like, for example:
+
+```ruby
+# spec/controllers/my_resource_controller_spec.rb
+require 'rails_helper'
+
+describe V1::MyResourceController do
+  Dictum.resource(
+    name: 'MyResource',
+    description: 'This is MyResource description.'
+  )
+
+  after(:each) do |test|
+    if test.metadata[:dictum]
+      Dictum.endpoint(
+        resource: test.metadata[:described_class].to_s.gsub('V1::', '').gsub('Controller', ''),
+        endpoint: request.fullpath,
+        http_verb: request.env['REQUEST_METHOD'],
+        description: test.metadata[:dictum_description],
+        request_headers: { 'AUTHORIZATION' => 'user_token',
+                           'Content-Type' => 'application/json',
+                           'Accept' => 'application/json' },
+        request_path_parameters: request.env['action_dispatch.request.path_parameters'].except(:controller, :action),
+        request_body_parameters: request.env['action_dispatch.request.parameters'].except('controller', 'action'),
+        response_headers: response.headers,
+        response_status: response.status,
+        response_body: response_body
+    end
+  end
+
+  describe '#some_method' do
+    context 'some context for my resource' do
+      it 'returns status ok', dictum: true, dictum_description: 'Some description of the endpoint.' do
+        get :index
+        expect(response_status).to eq(200)
+      end
+    end
+  end
+end
+```
+
+This is much better, but it is not DRYed enough because you would have to repeat the after(:each) declaration on every controller spec you have, so you can still improve it a bit more:
+
+```ruby
+# spec/rails_helper.rb
+RSpec.configure do |config|
+  config.after(:each) do |test|
+    if test.metadata[:dictum]
+      Dictum.endpoint(
+        # All the parameters that you want
+      )
+    end
+  end
+end
+end
+```
+
+```ruby
+# spec/controllers/my_resource_controller_spec.rb
+require 'rails_helper'
+
+describe V1::MyResourceController do
+  Dictum.resource(
+    name: 'MyResource',
+    description: 'This is MyResource description.'
+  )
+
+  describe '#some_method' do
+    context 'some context for my resource' do
+      it 'returns status ok', dictum: true, dictum_description: 'Some description of the endpoint.' do
+        get :index
+        expect(response_status).to eq(200)
+      end
+    end
+  end
+end
+```
 
 Then execute:
 
-    $ bundle exec dictum
+    $ bundle exec rake dictum:document
 
-This will create a document like this:
+Both ways Dictum will create a document like this:
 
     # Index
     - MyResource
@@ -85,7 +164,7 @@ This will create a document like this:
     # MyResource
     This is MyResource description.
 
-    ## GET /api/v1/my_resource
+    ## POST /api/v1/my_resource
 
     ### Description:
     Some description of the endpoint.
@@ -97,6 +176,21 @@ This will create a document like this:
       "Content-Type" : "application/json",
       "Accept" : "application/json"
     }
+    ```
+
+    ### Path parameters:
+    ```json
+    { "id": 1, "page": 1 }
+    ```
+
+    ### Body parameters:
+    ```json
+    { "some": "parameter" }
+    ```
+
+    ### Response headers:
+    ```json
+    { "some_header": "some_header_value" }
     ```
 
     ### Response status:
