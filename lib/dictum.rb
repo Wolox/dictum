@@ -1,6 +1,8 @@
 require 'dictum/version'
 require 'dictum/documenter'
 require 'dictum/markdown_writer'
+require 'dictum/html_writer'
+require 'dictum/html_helpers'
 
 module Dictum
   load 'tasks/dictum.rake' if defined?(Rails)
@@ -57,17 +59,24 @@ module Dictum
   def self.document
     Dir.mkdir(@config[:output_path]) unless Dir.exist?(@config[:output_path])
     Documenter.instance.reset_resources
+
     system "bundle exec rspec #{@config[:root_path]}" if @config[:test_suite] == :rspec
+
     save_to_file
   end
 
   def self.save_to_file
     writer = nil
+    output_filename = "#{@config[:output_path]}/#{@config[:output_filename]}"
+    tempfile_path = Documenter.instance.tempfile_path
+
     case @config[:output_format]
     when :markdown
-      writer = MarkdownWriter.new("#{@config[:output_path]}/#{@config[:output_filename]}.md",
-                                  Documenter.instance.tempfile_path)
+      writer = MarkdownWriter.new(output_filename, tempfile_path)
+    when :html
+      writer = HtmlWriter.new(output_filename, tempfile_path, 'Dictum').write
     end
+
     writer.write
   end
 end

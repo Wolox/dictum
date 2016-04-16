@@ -5,7 +5,7 @@ module Dictum
     attr_reader :temp_path, :temp_json, :output_path, :output_file
 
     def initialize(output_path, temp_path)
-      @output_path = output_path
+      @output_path = "#{output_path}.md"
       File.delete(output_path) if File.exist?(output_path)
       @temp_path = temp_path
       @temp_json = JSON.parse(File.read(temp_path))
