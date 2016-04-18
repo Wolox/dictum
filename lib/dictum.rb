@@ -74,7 +74,7 @@ module Dictum
     when :markdown
       writer = MarkdownWriter.new(output_filename, tempfile_path)
     when :html
-      writer = HtmlWriter.new(output_filename, tempfile_path, 'Dictum').write
+      writer = HtmlWriter.new(output_filename, tempfile_path, 'Dictum')
     end
 
     writer.write
