@@ -23,7 +23,7 @@ Or install it yourself as:
 
     $ gem install dictum
 
-## Usage
+## Basic usage
 
 First you need to set a configuration file inside /config/initializers/dictum.rb
 
@@ -33,8 +33,7 @@ Dictum.configure do |config|
   config.output_path = Rails.root.join('docs')
   config.root_path = Rails.root
   config.output_filename = 'Documentation'
-  # config.output_format = :markdown
-  # test_suite = :rspec
+  config.output_format = :markdown
 end
 ```
 
@@ -74,7 +73,59 @@ describe V1::MyResourceController do
   end
 end
 ```
-Most parameters are not mandatory, and as you can see, writing all of these for each endpoint can add a lot of unnecessary boilerplate. But since you know everything the method receives you can customize the usage anyway you like, for example:
+
+Then execute:
+
+    $ bundle exec rake dictum:document
+
+And voilà, Dictum will create a document like this in '/docs/Documentation':
+
+    # Index
+    - MyResource
+
+    # MyResource
+    This is MyResource description.
+
+    ## POST /api/v1/my_resource
+
+    ### Description:
+    Some description of the endpoint.
+
+    ### Request headers:
+    ```json
+    {
+      "AUTHORIZATION" : "user_token",
+      "Content-Type" : "application/json",
+      "Accept" : "application/json"
+    }
+    ```
+
+    ### Path parameters:
+    ```json
+    { "id": 1, "page": 1 }
+    ```
+
+    ### Body parameters:
+    ```json
+    { "some": "parameter" }
+    ```
+
+    ### Response headers:
+    ```json
+    { "some_header": "some_header_value" }
+    ```
+
+    ### Response status:
+    200
+
+    ### Response body:
+    ```json
+    "no_content"
+    ```
+
+# Advanced usage
+
+If you pay attention to the basic usage, you will notice that much code is needed if your API has a lot of endpoints, this is not DRY and adds unnecesary boilerplate. Luckily you can work around it using some Rspec tricks:
 
 ```ruby
 # spec/controllers/my_resource_controller_spec.rb
@@ -152,54 +203,37 @@ describe V1::MyResourceController do
 end
 ```
 
-Then execute:
+# Dynamic HTML documentation
 
-    $ bundle exec rake dictum:document
+So far so good, but your team needs to read the documentation everytime you update it, and sending the documentation file to them doesn't seem too practical. Instead you can use the HTML version of Dictum and generate static views with the content. Here is a very basic example of what you can do to generate the views and routes dynamycally:
 
-Both ways Dictum will create a document like this:
+```ruby
+# /config/initializers/dictum.rb
+Dictum.configure do |config|
+  config.output_path = Rails.root.join('app', 'views')
+  config.root_path = Rails.root
+  config.output_filename = 'docs'
+  config.output_format = :html
+end
+```
 
-    # Index
-    - MyResource
+Here we are telling Dictum to generate the HTML documentation in 'app/views/docs', where it will put one HTML file per resource you have defined. Now that we have the files, lets create the routes for them:
 
-    # MyResource
-    This is MyResource description.
+```ruby
+# config/routes.rb
+YourApp::Application.routes.draw do
+  #
+  # Other routes defined
+  #
+  
+  doc_paths = Dir["#{Rails.root.join('app', 'views', 'docs')}/*"].each do |path|
+    resource = path.split('/').last.gsub('.html', '')
+    get "/docs/#{resource}", to: "docs##{resource}"
+  end
+end
+```
 
-    ## POST /api/v1/my_resource
-
-    ### Description:
-    Some description of the endpoint.
-
-    ### Request headers:
-    ```json
-    {
-      "AUTHORIZATION" : "user_token",
-      "Content-Type" : "application/json",
-      "Accept" : "application/json"
-    }
-    ```
-
-    ### Path parameters:
-    ```json
-    { "id": 1, "page": 1 }
-    ```
-
-    ### Body parameters:
-    ```json
-    { "some": "parameter" }
-    ```
-
-    ### Response headers:
-    ```json
-    { "some_header": "some_header_value" }
-    ```
-
-    ### Response status:
-    200
-
-    ### Response body:
-    ```json
-    "no_content"
-    ```
+Of course you will need to have a controller for this, in this case one named 'docs_controller.rb'. And finally go to 'http://localhost:3000/docs/index.html'
 
 ## Contributing
 
