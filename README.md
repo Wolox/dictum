@@ -1,11 +1,11 @@
 # Dictum - Document your Rails APIs
 [![Gem Version](https://badge.fury.io/rb/dictum.svg)](https://badge.fury.io/rb/dictum)
-[![Dependency Status](https://gemnasium.com/badges/github.com/alebian/dictum.svg)](https://gemnasium.com/github.com/alebian/dictum)
-[![Build Status](https://travis-ci.org/alebian/dictum.svg)](https://travis-ci.org/alebian/dictum)
-[![Code Climate](https://codeclimate.com/github/alebian/dictum/badges/gpa.svg)](https://codeclimate.com/github/alebian/dictum)
-[![Test Coverage](https://codeclimate.com/github/alebian/dictum/badges/coverage.svg)](https://codeclimate.com/github/alebian/dictum/coverage)
-[![Issue Count](https://codeclimate.com/github/alebian/dictum/badges/issue_count.svg)](https://codeclimate.com/github/alebian/dictum)
-[![Inline docs](http://inch-ci.org/github/alebian/dictum.svg)](http://inch-ci.org/github/alebian/dictum)
+[![Dependency Status](https://gemnasium.com/badges/github.com/Wolox/dictum.svg)](https://gemnasium.com/github.com/Wolox/dictum)
+[![Build Status](https://travis-ci.org/wolox/dictum.svg)](https://travis-ci.org/wolox/dictum)
+[![Code Climate](https://codeclimate.com/github/wolox/dictum/badges/gpa.svg)](https://codeclimate.com/github/wolox/dictum)
+[![Test Coverage](https://codeclimate.com/github/wolox/dictum/badges/coverage.svg)](https://codeclimate.com/github/wolox/dictum/coverage)
+[![Issue Count](https://codeclimate.com/github/wolox/dictum/badges/issue_count.svg)](https://codeclimate.com/github/wolox/dictum)
+[![Inline docs](http://inch-ci.org/github/wolox/dictum.svg)](http://inch-ci.org/github/wolox/dictum)
 
 ## Installation
 
@@ -245,9 +245,15 @@ Of course you will need to have a controller for this, in this case one named 'd
 6. Push your branch (`git push origin my-new-feature`)
 7. Create a new Pull Request
 
+## About ##
+
+This project is maintained by [Alejandro Bezdjian](https://github.com/alebian) and it was written by [Wolox](http://www.wolox.com.ar).
+
+![Wolox](https://raw.githubusercontent.com/Wolox/press-kit/master/logos/logo_banner.png)
+
 ## License
 
-**Dictum** is available under the MIT [license](https://raw.githubusercontent.com/alebian/dictum/master/LICENSE.md).
+**Dictum** is available under the MIT [license](https://raw.githubusercontent.com/wolox/dictum/master/LICENSE.md).
 
     Copyright (c) 2016 Alejandro Bezdjian, aka alebian
 
