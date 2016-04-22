@@ -27,7 +27,7 @@ describe 'Dictum::HtmlHelpers' do
     expect(subject::JQUERY).to eq(jquery)
   end
 
-  describe 'html_header' do
+  describe '#html_header' do
     it 'returns the correct HTML header tags' do
       expect(subject.html_header(text)).to eq(
         "<!DOCTYPE html>\n<html>\n<head>\n<title>#{text}</title>\n" \
@@ -38,7 +38,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'html_footer' do
+  describe '#html_footer' do
     it 'returns the correct HTML footer tags' do
       expect(subject.html_footer).to eq(
         "#{subject.script(jquery)}\n#{subject.script(bootstrap_js)}\n" \
@@ -47,37 +47,37 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'page_css' do
+  describe '#page_css' do
     it 'returns the correct CSS' do
       expect(subject.page_css).to eq('')
     end
   end
 
-  describe 'container' do
+  describe '#container' do
     it 'returns the correct container tags' do
       expect(subject.container).to eq("<div class='container-fluid'>\n")
     end
   end
 
-  describe 'container_end' do
+  describe '#container_end' do
     it 'returns the correct container end tag' do
       expect(subject.container_end).to eq('</div>')
     end
   end
 
-  describe 'row' do
+  describe '#row' do
     it 'returns the correct row tag' do
       expect(subject.row).to eq("<div class='row'>\n<div class='col-md-8 col-md-offset-2'>\n")
     end
   end
 
-  describe 'row_end' do
+  describe '#row_end' do
     it 'returns the correct row end tag' do
       expect(subject.row_end).to eq("</div>\n</div>")
     end
   end
 
-  describe 'script' do
+  describe '#script' do
     it 'returns the correct script tag' do
       expect(subject.script(prettify)).to eq("<script src='#{prettify}'></script>")
     end
@@ -87,7 +87,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'external_css' do
+  describe '#external_css' do
     it 'returns the correct external css tag' do
       expect(subject.external_css(bootstrap_css))
         .to eq("<link rel='stylesheet' href='#{bootstrap_css}'>")
@@ -98,7 +98,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'unordered_list' do
+  describe '#unordered_list' do
     let(:elements) { %w(test test) }
 
     it 'returns the correct unordered list tags' do
@@ -115,7 +115,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'title' do
+  describe '#title' do
     it 'returns the correct title with class' do
       expect(subject.title(text, klass)).to eq(
         "<h1 class='#{klass}'>#{text}</h1>"
@@ -135,7 +135,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'subtitle' do
+  describe '#subtitle' do
     it 'returns the correct subtitle with class' do
       expect(subject.subtitle(text, klass)).to eq(
         "<h3 class='#{klass}'>#{text}</h3>"
@@ -155,7 +155,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'paragraph' do
+  describe '#paragraph' do
     it 'returns the correct paragraph with class' do
       expect(subject.paragraph(text, klass)).to eq(
         "<p class='#{klass}'>#{text}</p>"
@@ -175,7 +175,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'button' do
+  describe '#button' do
     it 'returns the correct button with glyphicon' do
       expect(subject.button(text, klass)).to eq(
         "<a href='index.html'><button type='button' class='btn btn-primary back'" \
@@ -201,7 +201,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'code_block' do
+  describe '#code_block' do
     it 'returns the correct code block with title' do
       expect(subject.code_block(text, {})).to eq(
         "<h4>#{text}</h4>\n<pre class='prettyprint'>{}</pre>"
@@ -219,7 +219,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'sub_subtitle' do
+  describe '#sub_subtitle' do
     it 'returns the correct sub subtitle with class' do
       expect(subject.sub_subtitle(text, klass)).to eq(
         "<h4 class='#{klass}'>#{text}</h4>"
@@ -239,7 +239,7 @@ describe 'Dictum::HtmlHelpers' do
     end
   end
 
-  describe 'code' do
+  describe '#code' do
     it 'returns the correct code' do
       expect(subject.code({})).to eq("<pre class='prettyprint'>{}</pre>")
     end

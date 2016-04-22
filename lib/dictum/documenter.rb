@@ -14,6 +14,7 @@ module Dictum
     end
 
     def resource(arguments = {})
+      return if arguments.nil?
       name = arguments[:name]
       return if name.nil?
       @resources[name] ||= {}
