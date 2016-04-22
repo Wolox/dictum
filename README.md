@@ -1,11 +1,11 @@
 # Dictum - Document your Rails APIs
 [![Gem Version](https://badge.fury.io/rb/dictum.svg)](https://badge.fury.io/rb/dictum)
 [![Dependency Status](https://gemnasium.com/badges/github.com/Wolox/dictum.svg)](https://gemnasium.com/github.com/Wolox/dictum)
-[![Build Status](https://travis-ci.org/wolox/dictum.svg)](https://travis-ci.org/wolox/dictum)
-[![Code Climate](https://codeclimate.com/github/wolox/dictum/badges/gpa.svg)](https://codeclimate.com/github/wolox/dictum)
-[![Test Coverage](https://codeclimate.com/github/wolox/dictum/badges/coverage.svg)](https://codeclimate.com/github/wolox/dictum/coverage)
-[![Issue Count](https://codeclimate.com/github/wolox/dictum/badges/issue_count.svg)](https://codeclimate.com/github/wolox/dictum)
-[![Inline docs](http://inch-ci.org/github/wolox/dictum.svg)](http://inch-ci.org/github/wolox/dictum)
+[![Build Status](https://travis-ci.org/Wolox/dictum.svg)](https://travis-ci.org/Wolox/dictum)
+[![Code Climate](https://codeclimate.com/github/Wolox/dictum/badges/gpa.svg)](https://codeclimate.com/github/Wolox/dictum)
+[![Test Coverage](https://codeclimate.com/github/Wolox/dictum/badges/coverage.svg)](https://codeclimate.com/github/Wolox/dictum/coverage)
+[![Issue Count](https://codeclimate.com/github/Wolox/dictum/badges/issue_count.svg)](https://codeclimate.com/github/Wolox/dictum)
+[![Inline docs](http://inch-ci.org/github/Wolox/dictum.svg)](http://inch-ci.org/github/Wolox/dictum)
 
 ## Installation
 
@@ -225,7 +225,7 @@ YourApp::Application.routes.draw do
   #
   # Other routes defined
   #
-  
+
   doc_paths = Dir["#{Rails.root.join('app', 'views', 'docs')}/*"].each do |path|
     resource = path.split('/').last.gsub('.html', '')
     get "/docs/#{resource}", to: "docs##{resource}"
@@ -253,7 +253,7 @@ This project is maintained by [Alejandro Bezdjian](https://github.com/alebian) a
 
 ## License
 
-**Dictum** is available under the MIT [license](https://raw.githubusercontent.com/wolox/dictum/master/LICENSE.md).
+**Dictum** is available under the MIT [license](https://raw.githubusercontent.com/Wolox/dictum/master/LICENSE.md).
 
     Copyright (c) 2016 Alejandro Bezdjian, aka alebian
 
