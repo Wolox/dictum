@@ -65,7 +65,7 @@ module Dictum
     end
 
     def print_subsubtitle_json(subtitle, contents)
-      return if !subtitle.present? || !contents.present?
+      return unless subtitle.present? && contents.present?
       output_file.puts "\#\#\# #{subtitle}:"
       output_file.puts "```json\n#{JSON.pretty_generate(contents)}\n```\n\n"
     end

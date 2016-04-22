@@ -79,30 +79,26 @@ module Dictum
     end
 
     def write_request_parameters(endpoint, file)
-      write_codeblock('Request headers', JSON.pretty_generate(endpoint['request_headers']), file)
-      write_codeblock('Request path parameters',
-                      JSON.pretty_generate(endpoint['request_path_parameters']), file)
-      write_codeblock('Request body parameters',
-                      JSON.pretty_generate(endpoint['request_body_parameters']), file)
+      write_codeblock('Request headers', endpoint['request_headers'], file)
+      write_codeblock('Request path parameters', endpoint['request_path_parameters'], file)
+      write_codeblock('Request body parameters', endpoint['request_body_parameters'], file)
     end
 
     def write_response(endpoint, file)
       write_codeblock('Status', endpoint['response_status'], file)
       write_codeblock(
-        'Response headers',
-        JSON.pretty_generate(endpoint['response_headers']),
-        file
+        'Response headers', endpoint['response_headers'], file
       ) if endpoint['response_headers']
 
       if endpoint['response_body']
         param = (endpoint['response_body'] == 'no_content') ? {} : endpoint['response_body']
-        write_codeblock('Response body', JSON.pretty_generate(param), file)
+        write_codeblock('Response body', param, file)
       end
     end
 
     def write_codeblock(text, json, file)
       return unless text && json && file
-      file.puts HtmlHelpers.code_block(text, json)
+      file.puts HtmlHelpers.code_block(text, JSON.pretty_generate(json))
     end
   end
 end
