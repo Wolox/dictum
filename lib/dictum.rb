@@ -39,6 +39,10 @@ module Dictum
     @config[:output_filename] = file
   end
 
+  def self.config
+    @config
+  end
+
   ##
   # Method used to create a new resource
   #
