@@ -77,7 +77,7 @@ module Dictum
     end
 
     def write_response(endpoint, builder)
-      answer = write_codeblock('Status', endpoint['response_status'], builder)
+      answer = builder.code_block('Status', endpoint['response_status'])
       answer += write_codeblock(
         'Response headers', endpoint['response_headers'], builder
       ) if endpoint['response_headers']

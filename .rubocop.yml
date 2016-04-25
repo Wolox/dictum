@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - dictum.gemspec
+    - spec/spec_helper.rb
 
 Documentation:
   Enabled: false

@@ -16,7 +16,6 @@ module Dictum
       write_index
       write_temp_path
       output_file.close
-      File.delete(temp_path) if File.exist?(temp_path)
     end
 
     private
@@ -59,13 +58,13 @@ module Dictum
     end
 
     def print_subsubtitle(subtitle, contents)
-      return if !subtitle.present? || !contents.present?
+      return if !subtitle || !contents
       output_file.puts "\#\#\# #{subtitle}:"
       output_file.puts "#{contents}\n\n"
     end
 
     def print_subsubtitle_json(subtitle, contents)
-      return unless subtitle.present? && contents.present?
+      return unless subtitle && contents
       output_file.puts "\#\#\# #{subtitle}:"
       output_file.puts "```json\n#{JSON.pretty_generate(contents)}\n```\n\n"
     end
