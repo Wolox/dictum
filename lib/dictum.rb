@@ -3,14 +3,15 @@ require 'dictum/documenter'
 require 'dictum/markdown_writer'
 require 'dictum/html_writer'
 require 'dictum/html_helpers'
+require 'tmpdir'
 
 module Dictum
   load 'tasks/dictum.rake' if defined?(Rails)
 
   @config = {
     output_format: :markdown,
-    output_path: '/tmp/docs',
-    root_path: '/tmp',
+    output_path: "#{Dir.tmpdir}/docs",
+    root_path: Dir.tmpdir,
     test_suite: :rspec,
     output_filename: 'Documentation'
   }

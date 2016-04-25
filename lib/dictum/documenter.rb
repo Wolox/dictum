@@ -1,4 +1,5 @@
 require 'singleton'
+require 'tmpdir'
 
 module Dictum
   ##
@@ -6,11 +7,13 @@ module Dictum
   #
   class Documenter
     include Singleton
+
     attr_reader :resources, :tempfile_path
+    TEMPFILE_NAME = 'dictum_temp.json'.freeze
 
     def initialize
       @resources = {}
-      @tempfile_path = '/tmp/dictum_temp.json'
+      @tempfile_path = "#{Dir.tmpdir}/#{TEMPFILE_NAME}"
     end
 
     def resource(arguments = {})
