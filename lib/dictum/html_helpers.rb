@@ -6,89 +6,99 @@ module Dictum
     PRETTIFY = 'https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js'.freeze
 
     class << self
-      def html_header(title)
-        "<!DOCTYPE html>\n<html>\n<head>\n<title>#{title}</title>\n#{external_css(BOOTSTRAP_CSS)}"\
-        "\n<style>\n#{page_css}\n</style>\n</head>\n<body>\n"
+      def build
+        yield self
       end
 
-      def html_footer
+      def html_header(title, body_content)
+        "<!DOCTYPE html>\n<html>\n<head>\n<title>#{title}</title>\n#{external_css(BOOTSTRAP_CSS)}"\
+        "\n<style>\n#{page_css}\n</style>\n</head>\n<body>\n#{body_content}" \
         "#{script(JQUERY)}\n#{script(BOOTSTRAP_JS)}\n#{script(PRETTIFY)}\n</body>\n</html>"
+      end
+
+      def container(content)
+        tag('div', "\n#{content}\n", class: 'container-fluid')
+      end
+
+      def row(content)
+        internal_div = tag('div', "\n#{content}\n", class: 'col-md-8 col-md-offset-2')
+        tag('div', "\n#{internal_div}", class: 'row')
       end
 
       def page_css
         ''
       end
 
-      def container
-        "<div class='container-fluid'>\n"
-      end
-
-      def container_end
-        '</div>'
-      end
-
-      def row
-        "<div class='row'>\n<div class='col-md-8 col-md-offset-2'>\n"
-      end
-
-      def row_end
-        "</div>\n</div>"
-      end
-
       def script(script_path)
         return '' unless script_path
-        "<script src='#{script_path}'></script>"
+        tag('script', nil, src: script_path)
       end
 
       def external_css(css_path)
         return '' unless css_path
-        "<link rel='stylesheet' href='#{css_path}'>"
+        "<link rel='stylesheet' href='#{css_path}' />\n"
       end
 
       def unordered_list(elements)
-        return "<ul>\n</ul>" unless elements
+        return "<ul>\n</ul>\n" unless elements
         answer = "<ul>\n"
         elements.each do |element|
           answer += "<li><a href='#{element.downcase}.html'>#{element}</a></li>\n"
         end
-        answer += '</ul>'
+        answer += "</ul>\n"
+      end
+
+      def link(href, content)
+        tag('a', content, href: href)
       end
 
       def title(text, html_class = nil)
-        return "<h1>#{text}</h1>" unless html_class
-        "<h1 class='#{html_class}'>#{text}</h1>"
+        return "<h1>#{text}</h1>\n" unless html_class
+        tag('h1', text, class: html_class)
       end
 
       def subtitle(text, html_class = nil)
-        return "<h3>#{text}</h3>" unless html_class
-        "<h3 class='#{html_class}'>#{text}</h3>"
+        return "<h3>#{text}</h3>\n" unless html_class
+        tag('h3', text, class: html_class)
       end
 
       def sub_subtitle(text, html_class = nil)
-        return "<h4>#{text}</h4>" unless html_class
-        "<h4 class='#{html_class}'>#{text}</h4>"
+        return "<h4>#{text}</h4>\n" unless html_class
+        tag('h4', text, class: html_class)
       end
 
       def paragraph(text, html_class = nil)
-        return "<p>#{text}</p>" unless html_class
-        "<p class='#{html_class}'>#{text}</p>"
+        return "<p>#{text}</p>\n" unless html_class
+        tag('p', text, class: html_class)
       end
 
       def button(text, glyphicon = nil)
-        "<a href='index.html'><button type='button' class='btn btn-primary back'" \
-        "aria-label='Left Align'><span class='glyphicon #{glyphicon}' aria-hidden='true'>" \
-        "</span>#{text}</button></a>"
+        span = tag('span', text, class: "glyphicon #{glyphicon}", 'aria-hidden' => 'true')
+        button = tag('button', "\n#{span}", 'type' => 'button',
+                                            'class' => 'btn btn-primary back',
+                                            'aria-label' => 'Left Align')
+        tag('a', "\n#{button}", href: 'index.html')
       end
 
       def code_block(title, json)
         return '' unless json
         return code(json) unless title
-        "#{sub_subtitle(title)}\n#{code(json)}"
+        "#{sub_subtitle(title)}#{code(json)}"
       end
 
       def code(json)
         return '' unless json
-        "<pre class='prettyprint'>#{json}</pre>"
+        tag('pre', json, class: 'prettyprint')
+      end
+
+      def tag(name, content, attributes = {})
+        return '' unless name
+        answer = "<#{name}"
+        attributes.each do |key, value|
+          answer += " #{key}='#{value}'"
+        end
+        answer += ">#{content}"
+        answer += "</#{name}>\n"
       end
     end
   end
