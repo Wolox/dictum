@@ -1,5 +1,6 @@
 require_relative 'html_helpers'
 require 'json'
+require 'htmlbeautifier'
 
 module Dictum
   class HtmlWriter
@@ -22,7 +23,7 @@ module Dictum
 
     def write_to_file(file_path, content)
       index = File.open(file_path, 'w+')
-      index.puts(content)
+      index.puts(HtmlBeautifier.beautify(content))
       index.close
     end
 
