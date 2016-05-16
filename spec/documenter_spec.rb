@@ -149,7 +149,8 @@ describe 'Dictum::Documenter' do
                   response_headers: response_headers,
                   response_body: response_body }
               ]
-            })
+            }
+          )
       end
     end
 
