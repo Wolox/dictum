@@ -78,7 +78,7 @@ Then execute:
 
     $ bundle exec rake dictum:document
 
-And voilà, Dictum will create a document like this in '/docs/Documentation':
+And voilà, Dictum will create a document like this in '/docs/Documentation' (see [example.md](https://github.com/Wolox/dictum/blob/master/example.md)):
 
     # Index
     - MyResource
@@ -233,6 +233,12 @@ end
 ```
 
 Of course you will need to have a controller for this, in this case one named 'docs_controller.rb'. And finally go to 'http://localhost:3000/docs/index.html'
+
+This is an HTML example:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Wolox/dictum/master/example.gif">
+</p>
 
 ## Contributing
 
