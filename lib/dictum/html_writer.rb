@@ -1,6 +1,6 @@
 require_relative 'html_helpers'
 require 'json'
-require 'htmlbeautifier'
+require 'nokogiri'
 
 module Dictum
   class HtmlWriter
@@ -23,7 +23,7 @@ module Dictum
 
     def write_to_file(file_path, content)
       index = File.open(file_path, 'w+')
-      index.puts(HtmlBeautifier.beautify(content))
+      index.puts(Nokogiri::HTML(content).to_html)
       index.close
     end
 
@@ -91,7 +91,8 @@ module Dictum
 
     def write_codeblock(text, json, builder)
       return unless text && json && builder
-      builder.code_block(text, JSON.pretty_generate(json))
+      sanitized_json = json.empty? ? {} : json
+      builder.code_block(text, JSON.pretty_generate(sanitized_json))
     end
   end
 end

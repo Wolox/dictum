@@ -65,8 +65,9 @@ module Dictum
 
     def print_subsubtitle_json(subtitle, contents)
       return unless subtitle && contents
+      sanitized_contents = contents.empty? ? {} : contents
       output_file.puts "\#\#\# #{subtitle}:"
-      output_file.puts "```json\n#{JSON.pretty_generate(contents)}\n```\n\n"
+      output_file.puts "```json\n#{JSON.pretty_generate(sanitized_contents)}\n```\n\n"
     end
   end
 end

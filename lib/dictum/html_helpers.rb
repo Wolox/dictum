@@ -11,18 +11,18 @@ module Dictum
       end
 
       def html_header(title, body_content)
-        "<!DOCTYPE html>\n<html>\n<head>\n<title>#{title}</title>\n#{external_css(BOOTSTRAP_CSS)}"\
-        "\n<style>\n#{page_css}\n</style>\n</head>\n<body>\n#{body_content}" \
-        "#{script(JQUERY)}\n#{script(BOOTSTRAP_JS)}\n#{script(PRETTIFY)}\n</body>\n</html>"
+        "<!DOCTYPE html><html><head><title>#{title}</title>#{external_css(BOOTSTRAP_CSS)}"\
+        "<style>#{page_css}</style></head><body>#{body_content}" \
+        "#{script(JQUERY)}#{script(BOOTSTRAP_JS)}#{script(PRETTIFY)}</body></html>"
       end
 
       def container(content)
-        tag('div', "\n#{content}\n", class: 'container-fluid')
+        tag('div', content.to_s, class: 'container-fluid')
       end
 
       def row(content)
-        internal_div = tag('div', "\n#{content}\n", class: 'col-md-8 col-md-offset-2')
-        tag('div', "\n#{internal_div}", class: 'row')
+        internal_div = tag('div', content.to_s, class: 'col-md-8 col-md-offset-2')
+        tag('div', internal_div.to_s, class: 'row')
       end
 
       def page_css
@@ -36,48 +36,52 @@ module Dictum
 
       def external_css(css_path)
         return '' unless css_path
-        "<link rel='stylesheet' href='#{css_path}' />\n"
+        "<link rel='stylesheet' href='#{css_path}' />"
       end
 
       def unordered_list(elements)
-        return "<ul>\n</ul>\n" unless elements
-        answer = "<ul>\n"
+        return '<ul></ul>' unless elements
+        answer = '<ul>'
         elements.each do |element|
-          answer += "<li><a href='#{element.downcase}.html'>#{element}</a></li>\n"
+          answer += list_item(link("#{element.downcase}.html", element))
         end
-        answer += "</ul>\n"
+        answer += '</ul>'
+      end
+
+      def list_item(content)
+        tag('li', content)
       end
 
       def link(href, content)
-        tag('a', content, href: href)
+        tag('a', content, href: './' + href)
       end
 
       def title(text, html_class = nil)
-        return "<h1>#{text}</h1>\n" unless html_class
+        return "<h1>#{text}</h1>" unless html_class
         tag('h1', text, class: html_class)
       end
 
       def subtitle(text, html_class = nil)
-        return "<h3>#{text}</h3>\n" unless html_class
+        return "<h3>#{text}</h3>" unless html_class
         tag('h3', text, class: html_class)
       end
 
       def sub_subtitle(text, html_class = nil)
-        return "<h4>#{text}</h4>\n" unless html_class
+        return "<h4>#{text}</h4>" unless html_class
         tag('h4', text, class: html_class)
       end
 
       def paragraph(text, html_class = nil)
-        return "<p>#{text}</p>\n" unless html_class
+        return "<p>#{text}</p>" unless html_class
         tag('p', text, class: html_class)
       end
 
       def button(text, glyphicon = nil)
         span = tag('span', text, class: "glyphicon #{glyphicon}", 'aria-hidden' => 'true')
-        button = tag('button', "\n#{span}", 'type' => 'button',
-                                            'class' => 'btn btn-primary back',
-                                            'aria-label' => 'Left Align')
-        tag('a', "\n#{button}", href: 'index.html')
+        button = tag('button', span.to_s, 'type' => 'button',
+                                          'class' => 'btn btn-primary back',
+                                          'aria-label' => 'Left Align')
+        tag('a', button.to_s, href: 'index.html')
       end
 
       def code_block(title, json)
@@ -97,8 +101,7 @@ module Dictum
         attributes.each do |key, value|
           answer += " #{key}='#{value}'"
         end
-        answer += ">#{content}"
-        answer += "</#{name}>\n"
+        answer += ">#{content}</#{name}>"
       end
     end
   end
