@@ -25,7 +25,11 @@ Or install it yourself as:
 
 ## Basic usage
 
-First you need to set a configuration file inside /config/initializers/dictum.rb
+First run:
+
+    $ bundle exec rake dictum:configure [PATH_TO_HELPER_FILE]
+
+This will create a basic Rspec configuration in 'spec/support/spec_helper.rb' or in PATH_TO_HELPER_FILE. Also it will create a configuration file inside /config/initializers/dictum.rb
 
 ```ruby
 # /config/initializers/dictum.rb
@@ -180,6 +184,8 @@ RSpec.configure do |config|
   end
 end
 ```
+
+A file similar (and more complete) to that one is created when you run the rake dictum:configure task.
 
 ```ruby
 # spec/controllers/my_resource_controller_spec.rb
