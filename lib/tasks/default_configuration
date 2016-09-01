@@ -1,0 +1,19 @@
+
+RSpec.configure do |config|
+  config.after(:each) do |test|
+    if test.metadata[:dictum]
+    Dictum.endpoint(
+      resource: test.metadata[:described_class].to_s.gsub('V1::', '').gsub('Controller', ''),
+      endpoint: request.fullpath,
+      http_verb: request.env['REQUEST_METHOD'],
+      description: test.metadata[:dictum_description],
+      request_headers: test.metadata[:dictum_no_auth] ? DEFAULT_REQUEST_HEADERS.except('AUTHORIZATION') : DEFAULT_REQUEST_HEADERS,
+      request_path_parameters: request.env['action_dispatch.request.path_parameters'].except(:controller, :action),
+      request_body_parameters: request.env['action_dispatch.request.parameters'].except('controller', 'action'),
+      response_headers: response.headers['Location'] ? { 'Location' => response.headers['Location'] } : nil,
+      response_status: response.status,
+      response_body: response_body
+    )
+    end
+  end
+end
