@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '>= 1.3.0', '< 2.0'
   spec.add_development_dependency 'rspec', '~> 3.4', '>= 3.4.0'
   spec.add_development_dependency 'byebug', '~> 8.0', '>= 8.0.0' if RUBY_VERSION >= '2.0.0'
-  spec.add_development_dependency 'rubocop', '~> 0.40', '>= 0.40.0'
+  spec.add_development_dependency 'rubocop', '~> 0.42', '>= 0.42.0'
 end

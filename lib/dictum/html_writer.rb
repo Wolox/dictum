@@ -83,7 +83,7 @@ module Dictum
       ) if endpoint['response_headers']
 
       if endpoint['response_body']
-        param = (endpoint['response_body'] == 'no_content') ? {} : endpoint['response_body']
+        param = endpoint['response_body'] == 'no_content' ? {} : endpoint['response_body']
         answer += write_codeblock('Response body', param, builder)
       end
       answer
