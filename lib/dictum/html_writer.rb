@@ -33,7 +33,7 @@ module Dictum
         content = b.jumbotron(b.title(@config[:index_title], 'title'))
         content += b.unordered_list(temp_json.keys)
         container = b.container(b.row(content))
-        b.html_header(header_title, container)
+        b.html_header(header_title, container, @config[:inline_css])
       end
       write_to_file("#{output_dir}/index.html", html)
     end
@@ -49,8 +49,8 @@ module Dictum
         content = resource_header_and_endpoints(
           resource_name, information['description'], information['endpoints'], b
         )
-        container = b.container(b.row(content) + b.row(b.button('Back', 'glyphicon-menu-left')))
-        b.html_header(header_title, container)
+        container = b.container(b.row(content) + b.row(b.button('Back')))
+        b.html_header(header_title, container, @config[:inline_css])
       end
       write_to_file("#{output_dir}/#{resource_name.downcase}.html", html)
     end

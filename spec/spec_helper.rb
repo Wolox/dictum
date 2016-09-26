@@ -8,7 +8,7 @@ CONFIG = {
   test_suite: :rspec,
   output_filename: 'Documentation',
   index_title: 'Index',
-  output_title: 'Dictum'
+  header_title: 'Dictum'
 }
 
 # Create the test.json file

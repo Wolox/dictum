@@ -11,3 +11,6 @@ LineLength:
 
 FrozenStringLiteralComment:
   Enabled: false
+
+Metrics/AbcSize:
+  Max: 15.3

@@ -15,7 +15,8 @@ module Dictum
     test_suite: :rspec,
     output_filename: 'Documentation',
     index_title: 'Index',
-    header_title: 'Dictum'
+    header_title: 'Dictum',
+    inline_css: nil
   }
 
   def self.configure
@@ -48,6 +49,10 @@ module Dictum
 
   def self.header_title=(title)
     @config[:header_title] = title
+  end
+
+  def self.inline_css=(style)
+    @config[:inline_css] = style
   end
 
   def self.config

@@ -10,9 +10,9 @@ module Dictum
         yield self
       end
 
-      def html_header(title, body_content)
+      def html_header(title, body_content, inline_css = nil)
         "<!DOCTYPE html><html><head><title>#{title}</title>#{external_css(BOOTSTRAP_CSS)}"\
-        "<style>#{page_css}</style></head><body>#{body_content}" \
+        "#{inline_css(inline_css)}</head><body>#{body_content}" \
         "#{script(JQUERY)}#{script(BOOTSTRAP_JS)}#{script(PRETTIFY)}</body></html>"
       end
 
@@ -25,10 +25,6 @@ module Dictum
         tag('div', internal_div.to_s, class: 'row')
       end
 
-      def page_css
-        ''
-      end
-
       def script(script_path)
         return '' unless script_path
         tag('script', nil, src: script_path)
@@ -37,6 +33,11 @@ module Dictum
       def external_css(css_path)
         return '' unless css_path
         "<link rel='stylesheet' href='#{css_path}' />"
+      end
+
+      def inline_css(style)
+        return '' unless style
+        "<style>#{style}</style>"
       end
 
       def unordered_list(elements)
@@ -76,11 +77,13 @@ module Dictum
         tag('p', text, class: html_class)
       end
 
-      def button(text, glyphicon = nil)
-        span = tag('span', text, class: "glyphicon #{glyphicon}", 'aria-hidden' => 'true')
-        button = tag('button', span.to_s, 'type' => 'button',
-                                          'class' => 'btn btn-primary back',
-                                          'aria-label' => 'Left Align')
+      def button(text, glyphicon = 'glyphicon-menu-left')
+        span = tag('span', nil, class: "glyphicon #{glyphicon}", 'aria-hidden' => 'true')
+        paragraph = paragraph(text)
+        button_content = span.to_s + paragraph.to_s
+        button = tag('button', button_content, 'type' => 'button',
+                                               'class' => 'btn btn-primary back dictum-button',
+                                               'aria-label' => 'Left Align')
         tag('a', button.to_s, href: 'index.html')
       end
 

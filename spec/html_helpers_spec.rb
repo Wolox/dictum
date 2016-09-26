@@ -10,6 +10,7 @@ describe 'Dictum::HtmlHelpers' do
 
   let!(:text) { 'TEST TEXT' }
   let!(:klass) { 'test-class' }
+  let!(:css) { 'p{color:black;}' }
 
   it 'has the correct Bootstrap JS version' do
     expect(subject::BOOTSTRAP_JS).to eq(bootstrap_js)
@@ -29,18 +30,12 @@ describe 'Dictum::HtmlHelpers' do
 
   describe '#html_header' do
     it 'returns the correct HTML header tags' do
-      expect(subject.html_header(text, 'BODY')).to eq(
+      expect(subject.html_header(text, 'BODY', css)).to eq(
         "<!DOCTYPE html><html><head><title>#{text}</title>#{subject.external_css(bootstrap_css)}"\
-        "<style>#{subject.page_css}</style></head><body>BODY" \
+        "<style>#{css}</style></head><body>BODY" \
         "#{subject.script(jquery)}#{subject.script(bootstrap_js)}#{subject.script(prettify)}" \
         '</body></html>'
       )
-    end
-  end
-
-  describe '#page_css' do
-    it 'returns the correct CSS' do
-      expect(subject.page_css).to eq('')
     end
   end
 
@@ -151,25 +146,25 @@ describe 'Dictum::HtmlHelpers' do
   describe '#button' do
     it 'returns the correct button with glyphicon' do
       expect(subject.button(text, klass)).to eq(
-        "<a href='index.html'><button type='button' class='btn btn-primary back'" \
+        "<a href='index.html'><button type='button' class='btn btn-primary back dictum-button'" \
         " aria-label='Left Align'><span class='glyphicon #{klass}' aria-hidden='true'>" \
-        "#{text}</span></button></a>"
+        "</span><p>#{text}</p></button></a>"
       )
     end
 
     it 'returns the correct button without glyphicon' do
-      expect(subject.button(text, nil)).to eq(
-        "<a href='index.html'><button type='button' class='btn btn-primary back'" \
-        " aria-label='Left Align'><span class='glyphicon ' aria-hidden='true'>" \
-        "#{text}</span></button></a>"
+      expect(subject.button(text)).to eq(
+        "<a href='index.html'><button type='button' class='btn btn-primary back dictum-button'" \
+        " aria-label='Left Align'><span class='glyphicon glyphicon-menu-left' aria-hidden='true'>"\
+        "</span><p>#{text}</p></button></a>"
       )
     end
 
     it 'returns empty button without' do
       expect(subject.button(nil)).to eq(
-        "<a href='index.html'><button type='button' class='btn btn-primary back'" \
-        " aria-label='Left Align'><span class='glyphicon ' aria-hidden='true'>" \
-        '</span></button></a>'
+        "<a href='index.html'><button type='button' class='btn btn-primary back dictum-button'" \
+        " aria-label='Left Align'><span class='glyphicon glyphicon-menu-left' aria-hidden='true'>"\
+        '</span><p></p></button></a>'
       )
     end
   end
