@@ -8,21 +8,22 @@ module Dictum
   class Documenter
     include Singleton
 
-    attr_reader :resources, :tempfile_path
+    attr_reader :data, :tempfile_path
     TEMPFILE_NAME = 'dictum_temp.json'.freeze
 
     def initialize
-      @resources = {}
+      reset_data
       @tempfile_path = "#{Dir.tmpdir}/#{TEMPFILE_NAME}"
     end
 
     def resource(arguments = {})
       return if arguments.nil?
       name = arguments[:name]
+      description = arguments[:description]
       return if name.nil?
-      @resources[name] ||= {}
-      @resources[name][:description] = arguments[:description] if arguments[:description]
-      @resources[name][:endpoints] ||= []
+      resources[name] ||= {}
+      resources[name][:description] = description if description
+      resources[name][:endpoints] ||= []
       update_temp
     end
 
@@ -30,21 +31,27 @@ module Dictum
       resource = arguments[:resource]
       endpoint = arguments[:endpoint]
       return if resource.nil? || endpoint.nil?
-      resource(name: arguments[:resource]) unless @resources.key? arguments[:resource]
-      @resources[resource][:endpoints] << arguments_hash(arguments)
+      resource(name: resource) unless resources.key? resource
+      resources[resource][:endpoints] << arguments_hash(arguments)
       update_temp
     end
 
-    def reset_resources
-      @resources = {}
+    def reset_data
+      @data = {
+        resources: {}
+      }
     end
 
     private
 
+    def resources
+      @data[:resources]
+    end
+
     def update_temp
       File.delete(tempfile_path) if File.exist?(tempfile_path)
       file = File.open(tempfile_path, 'w+')
-      file.write(JSON.generate(@resources))
+      file.write(JSON.generate(@data))
       file.close
     end
 

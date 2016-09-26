@@ -31,7 +31,7 @@ module Dictum
     def write_index
       html = HtmlHelpers.build do |b|
         content = b.jumbotron(b.title(@config[:index_title], 'title'))
-        content += b.unordered_list(temp_json.keys)
+        content += b.unordered_list(resources.keys)
         container = b.container(b.row(content))
         b.html_header(header_title, container, @config[:inline_css])
       end
@@ -39,9 +39,13 @@ module Dictum
     end
 
     def write_pages
-      temp_json.each do |resource_name, information|
+      resources.each do |resource_name, information|
         write_page(resource_name, information)
       end
+    end
+
+    def resources
+      temp_json['resources']
     end
 
     def write_page(resource_name, information)

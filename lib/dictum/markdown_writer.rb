@@ -23,14 +23,14 @@ module Dictum
 
     def write_index
       output_file.puts "# #{@config[:index_title]}"
-      @temp_json.each do |resource_name, _information|
+      @temp_json['resources'].each do |resource_name, _information|
         output_file.puts "- #{resource_name}"
       end
       output_file.puts "\n"
     end
 
     def write_temp_path
-      @temp_json.each do |resource_name, information|
+      @temp_json['resources'].each do |resource_name, information|
         output_file.puts "# #{resource_name}"
         output_file.puts "#{information['description']}\n\n"
         write_endpoints(information['endpoints'])

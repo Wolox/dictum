@@ -78,7 +78,7 @@ module Dictum
   #
   def self.document
     Dir.mkdir(@config[:output_path]) unless Dir.exist?(@config[:output_path])
-    Documenter.instance.reset_resources
+    Documenter.instance.reset_data
 
     system "bundle exec rspec #{@config[:root_path]}" if @config[:test_suite] == :rspec
 

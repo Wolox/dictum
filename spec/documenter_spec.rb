@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'byebug'
 
 describe 'Dictum::Documenter' do
   subject(:documenter) { Dictum::Documenter.instance }
@@ -6,17 +7,17 @@ describe 'Dictum::Documenter' do
   let(:resource_description) { 'Description' }
 
   before(:each) do
-    subject.reset_resources
+    subject.reset_data
   end
 
   describe '#resource' do
     let(:arguments) { { name: resource, description: resource_description } }
 
     it 'adds the resource internally' do
-      expect { subject.resource(arguments) }
-        .to change { subject.resources }
-        .from({})
-        .to(resource.to_s => { description: resource_description, endpoints: [] })
+      subject.resource(arguments)
+      expect(subject.data).to eq(
+        resources: { resource.to_s => { description: resource_description, endpoints: [] } }
+      )
     end
 
     it 'writes the result in the temp directory' do
@@ -27,26 +28,26 @@ describe 'Dictum::Documenter' do
 
     it 'writes the contents of the tempfile correctly' do
       subject.resource(arguments)
-      expect(File.open(subject.tempfile_path, 'r').read).to eq(JSON.generate(subject.resources))
+      expect(File.open(subject.tempfile_path, 'r').read).to eq(JSON.generate(subject.data))
     end
 
     context 'when arguments are empty' do
       let(:resource) { nil }
 
       it 'does not add anything' do
-        expect { subject.resource }.not_to change { subject.resources }
+        expect { subject.resource }.not_to change { subject.data }
       end
 
       it 'does not add anything with nil' do
-        expect { subject.resource(nil) }.not_to change { subject.resources }
+        expect { subject.resource(nil) }.not_to change { subject.data }
       end
 
       it 'does not add anything without name' do
-        expect { subject.resource({}) }.not_to change { subject.resources }
+        expect { subject.resource({}) }.not_to change { subject.data }
       end
 
       it 'does not add anything with no name' do
-        expect { subject.resource(arguments) }.not_to change { subject.resources }
+        expect { subject.resource(arguments) }.not_to change { subject.data }
       end
     end
   end
@@ -70,26 +71,28 @@ describe 'Dictum::Documenter' do
 
     context 'when the resource has already been added' do
       before(:each) do
-        subject.reset_resources
+        subject.reset_data
         subject.resource(name: resource, description: resource_description)
       end
 
       it 'adds the correct resources internally' do
         subject.endpoint(arguments)
-        expect(subject.resources).to eq(
-          resource.to_s => {
-            description: resource_description,
-            endpoints: [
-              { endpoint: endpoint,
-                description: endpoint_description,
-                http_verb: http_verb,
-                request_headers: request_headers,
-                request_path_parameters: request_path_parameters,
-                request_body_parameters: request_body_parameters,
-                response_status: response_status,
-                response_headers: response_headers,
-                response_body: response_body }
-            ]
+        expect(subject.data).to eq(
+          resources: {
+            resource.to_s => {
+              description: resource_description,
+              endpoints: [
+                { endpoint: endpoint,
+                  description: endpoint_description,
+                  http_verb: http_verb,
+                  request_headers: request_headers,
+                  request_path_parameters: request_path_parameters,
+                  request_body_parameters: request_body_parameters,
+                  response_status: response_status,
+                  response_headers: response_headers,
+                  response_body: response_body }
+              ]
+            }
           }
         )
       end
@@ -106,20 +109,22 @@ describe 'Dictum::Documenter' do
 
         it 'adds the empty resources internally' do
           subject.endpoint(arguments)
-          expect(subject.resources).to eq(
-            resource.to_s => {
-              description: resource_description,
-              endpoints: [
-                { endpoint: endpoint,
-                  description: endpoint_description,
-                  http_verb: '',
-                  request_headers: nil,
-                  request_path_parameters: nil,
-                  request_body_parameters: nil,
-                  response_status: nil,
-                  response_headers: nil,
-                  response_body: nil }
-              ]
+          expect(subject.data).to eq(
+            resources: {
+              resource.to_s => {
+                description: resource_description,
+                endpoints: [
+                  { endpoint: endpoint,
+                    description: endpoint_description,
+                    http_verb: '',
+                    request_headers: nil,
+                    request_path_parameters: nil,
+                    request_body_parameters: nil,
+                    response_status: nil,
+                    response_headers: nil,
+                    response_body: nil }
+                ]
+              }
             }
           )
         end
@@ -129,14 +134,13 @@ describe 'Dictum::Documenter' do
     context 'when the resource was not added before' do
       it 'adds the resource internally' do
         subject.endpoint(arguments)
-        expect(subject.resources[resource].nil?).to be_falsey
+        expect(subject.data[:resources][resource].nil?).to be_falsey
       end
 
       it 'adds the correct resources internally' do
-        expect { subject.endpoint(arguments) }
-          .to change { subject.resources }
-          .from({})
-          .to(
+        subject.endpoint(arguments)
+        expect(subject.data).to eq(
+          resources: {
             resource.to_s => {
               endpoints: [
                 { endpoint: endpoint,
@@ -150,7 +154,8 @@ describe 'Dictum::Documenter' do
                   response_body: response_body }
               ]
             }
-          )
+          }
+        )
       end
     end
 
@@ -162,18 +167,18 @@ describe 'Dictum::Documenter' do
 
     it 'writes the contents of the tempfile correctly' do
       subject.endpoint(arguments)
-      expect(File.open(subject.tempfile_path, 'r').read).to eq(JSON.generate(subject.resources))
+      expect(File.open(subject.tempfile_path, 'r').read).to eq(JSON.generate(subject.data))
     end
 
     context 'when not sending the mandatory parameters' do
       it 'does not add anything without endpoint' do
         arguments[:endpoint] = nil
-        expect { subject.endpoint(arguments) }.not_to change { subject.resources }
+        expect { subject.endpoint(arguments) }.not_to change { subject.data }
       end
 
       it 'does not add anything without resource' do
         arguments[:resource] = nil
-        expect { subject.endpoint(arguments) }.not_to change { subject.resources }
+        expect { subject.endpoint(arguments) }.not_to change { subject.data }
       end
     end
   end
