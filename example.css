@@ -1,0 +1,84 @@
+body {
+  background-color: white;
+}
+
+ul {
+    list-style-type: disc;
+}
+
+a {
+  color: blue;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.jumbotron {
+  background-color: grey;
+}
+
+pre {
+  background-color: grey;
+}
+
+.jumbotron > h1{
+  color: black;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 50px;
+}
+
+h1 {
+  color: black;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 40px;
+}
+
+p {
+  color: black;
+  font-family: sans-serif;
+}
+
+h3 {
+  color: black;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+h4 {
+  color: grey;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 20px;
+}
+
+.dictum-button {
+  background-color: white;
+  border-color: black;
+  color: black;
+  margin-right: 10px;
+}
+
+.dictum-button > p {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  display: inline;
+}
+
+.dictum-button:hover {
+  background-color: transparent;
+  border-color: blue;
+  color: blue;
+}
+
+span.lit, span.kwd {
+  color: green;
+}
+
+span.pun, span.str {
+  color: black;
+}

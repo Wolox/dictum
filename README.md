@@ -38,6 +38,7 @@ Dictum.configure do |config|
   config.root_path = Rails.root
   config.output_filename = 'Documentation'
   config.output_format = :markdown
+  config.index_title = 'My Documentation Title'
 end
 ```
 
@@ -84,7 +85,7 @@ Then execute:
 
 And voilà, Dictum will create a document like this in '/docs/Documentation' (see [example.md](https://github.com/Wolox/dictum/blob/master/example.md)):
 
-    # Index
+    # My Documentation Title
     - MyResource
 
     # MyResource
@@ -129,20 +130,14 @@ And voilà, Dictum will create a document like this in '/docs/Documentation' (se
 
 # Advanced usage
 
-If you pay attention to the basic usage, you will notice that much code is needed if your API has a lot of endpoints, this is not DRY and adds unnecesary boilerplate. Luckily you can work around it using some Rspec tricks:
+If you pay attention to the basic usage, you will notice that it is a lot of boilerplate if your API has a lot of endpoints, this is not DRY. Luckily you can work around it using some Rspec tricks:
 
 ```ruby
-# spec/controllers/my_resource_controller_spec.rb
-require 'rails_helper'
-
-describe V1::MyResourceController do
-  Dictum.resource(
-    name: 'MyResource',
-    description: 'This is MyResource description.'
-  )
-
-  after(:each) do |test|
+# spec/rails_helper.rb
+RSpec.configure do |config|
+  config.after(:each) do |test|
     if test.metadata[:dictum]
+      Dictum.endpoint(
       Dictum.endpoint(
         resource: test.metadata[:described_class].to_s.gsub('V1::', '').gsub('Controller', ''),
         endpoint: request.fullpath,
@@ -156,29 +151,6 @@ describe V1::MyResourceController do
         response_headers: response.headers,
         response_status: response.status,
         response_body: response_body
-    end
-  end
-
-  describe '#some_method' do
-    context 'some context for my resource' do
-      it 'returns status ok', dictum: true, dictum_description: 'Some description of the endpoint.' do
-        get :index
-        expect(response_status).to eq(200)
-      end
-    end
-  end
-end
-```
-
-This is much better, but it is not DRYed enough because you would have to repeat the after(:each) declaration on every controller spec you have, so you can still improve it a bit more:
-
-```ruby
-# spec/rails_helper.rb
-RSpec.configure do |config|
-  config.after(:each) do |test|
-    if test.metadata[:dictum]
-      Dictum.endpoint(
-        # All the parameters that you want
       )
     end
   end
@@ -208,6 +180,8 @@ describe V1::MyResourceController do
 end
 ```
 
+This is how your controller test should look now, much better.
+
 # Dynamic HTML documentation
 
 So far so good, but your team needs to read the documentation everytime you update it, and sending the documentation file to them doesn't seem too practical. Instead you can use the HTML version of Dictum and generate static views with the content. Here is a very basic example of what you can do to generate the views and routes dynamycally:
@@ -219,6 +193,9 @@ Dictum.configure do |config|
   config.root_path = Rails.root
   config.output_filename = 'docs'
   config.output_format = :html
+  config.index_title = 'My documentation title'
+  config.header_title = 'API doc'
+  config.inline_css = File.read(Rails.root.join('app', 'assets', 'stylesheets', 'documentation.css'))
 end
 ```
 
@@ -245,6 +222,8 @@ This is an HTML example:
 <p align="center">
   <img src="https://raw.githubusercontent.com/Wolox/dictum/master/example.gif">
 </p>
+
+You can customize the HTML using css like this [example](https://raw.githubusercontent.com/Wolox/dictum/master/example.css).
 
 ## Contributing
 
