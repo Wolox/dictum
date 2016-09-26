@@ -1,6 +1,16 @@
 require 'support/coverage'
 require 'dictum'
 
+CONFIG = {
+  output_format: :markdown,
+  output_path: "#{Dir.tmpdir}/docs",
+  root_path: Dir.tmpdir,
+  test_suite: :rspec,
+  output_filename: 'Documentation',
+  index_title: 'Index',
+  output_title: 'Dictum'
+}
+
 # Create the test.json file
 def create_test_json
   documenter = Dictum::Documenter.instance

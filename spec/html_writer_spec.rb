@@ -4,7 +4,7 @@ require 'json'
 describe 'Dictum::HtmlWriter' do
   let(:temp_path) { './spec/temp/dictum_temp.json' }
   let(:output_dir) { './spec/temp/docs' }
-  subject(:documenter) { Dictum::HtmlWriter.new(output_dir, temp_path, 'Test') }
+  subject(:documenter) { Dictum::HtmlWriter.new(output_dir, temp_path, CONFIG) }
 
   before(:all) do
     FileUtils.remove_dir('./spec/temp/docs') if Dir.exist?('./spec/temp/docs')

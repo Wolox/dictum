@@ -4,11 +4,12 @@ module Dictum
   class MarkdownWriter
     attr_reader :temp_path, :temp_json, :output_path, :output_file
 
-    def initialize(output_path, temp_path)
+    def initialize(output_path, temp_path, config)
       @output_path = "#{output_path}.md"
       File.delete(output_path) if File.exist?(output_path)
       @temp_path = temp_path
       @temp_json = JSON.parse(File.read(temp_path))
+      @config = config
     end
 
     def write
@@ -21,7 +22,7 @@ module Dictum
     private
 
     def write_index
-      output_file.puts '# Index'
+      output_file.puts "# #{@config[:index_title]}"
       @temp_json.each do |resource_name, _information|
         output_file.puts "- #{resource_name}"
       end

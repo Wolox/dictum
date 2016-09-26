@@ -4,13 +4,14 @@ require 'nokogiri'
 
 module Dictum
   class HtmlWriter
-    attr_reader :temp_path, :temp_json, :output_dir, :output_file, :output_title
+    attr_reader :temp_path, :temp_json, :output_dir, :output_file, :header_title
 
-    def initialize(output_dir, temp_path, output_title)
+    def initialize(output_dir, temp_path, config)
       @output_dir = output_dir
       @temp_path = temp_path
       @temp_json = JSON.parse(File.read(temp_path))
-      @output_title = output_title
+      @config = config
+      @header_title = config[:header_title]
     end
 
     def write
@@ -29,10 +30,10 @@ module Dictum
 
     def write_index
       html = HtmlHelpers.build do |b|
-        content = "<div class='jumbotron'>\n#{HtmlHelpers.title('Index', 'title')}\n</div>\n"
+        content = b.jumbotron(b.title(@config[:index_title], 'title'))
         content += b.unordered_list(temp_json.keys)
         container = b.container(b.row(content))
-        b.html_header(output_title, container)
+        b.html_header(header_title, container)
       end
       write_to_file("#{output_dir}/index.html", html)
     end
@@ -49,7 +50,7 @@ module Dictum
           resource_name, information['description'], information['endpoints'], b
         )
         container = b.container(b.row(content) + b.row(b.button('Back', 'glyphicon-menu-left')))
-        b.html_header(output_title, container)
+        b.html_header(header_title, container)
       end
       write_to_file("#{output_dir}/#{resource_name.downcase}.html", html)
     end

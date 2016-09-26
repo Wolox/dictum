@@ -13,7 +13,9 @@ module Dictum
     output_path: "#{Dir.tmpdir}/docs",
     root_path: Dir.tmpdir,
     test_suite: :rspec,
-    output_filename: 'Documentation'
+    output_filename: 'Documentation',
+    index_title: 'Index',
+    header_title: 'Dictum'
   }
 
   def self.configure
@@ -38,6 +40,14 @@ module Dictum
 
   def self.output_filename=(file)
     @config[:output_filename] = file
+  end
+
+  def self.index_title=(title)
+    @config[:index_title] = title
+  end
+
+  def self.header_title=(title)
+    @config[:header_title] = title
   end
 
   def self.config
@@ -77,9 +87,9 @@ module Dictum
 
     case @config[:output_format]
     when :markdown
-      writer = MarkdownWriter.new(output_filename, tempfile_path)
+      writer = MarkdownWriter.new(output_filename, tempfile_path, @config)
     when :html
-      writer = HtmlWriter.new(output_filename, tempfile_path, 'Dictum')
+      writer = HtmlWriter.new(output_filename, tempfile_path, @config)
     end
 
     writer.write

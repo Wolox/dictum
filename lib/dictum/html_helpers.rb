@@ -95,6 +95,11 @@ module Dictum
         tag('pre', json, class: 'prettyprint')
       end
 
+      def jumbotron(content)
+        return '' unless content
+        tag('div', content, class: 'jumbotron')
+      end
+
       def tag(name, content, attributes = {})
         return '' unless name
         answer = "<#{name}"
