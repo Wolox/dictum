@@ -8,6 +8,8 @@ require 'tmpdir'
 module Dictum
   load 'tasks/dictum.rake' if defined?(Rails)
 
+  TEMPFILE_PATH = "#{Dir.tmpdir}/dictum_temp.json".freeze
+
   @config = {
     output_format: :markdown,
     output_path: "#{Dir.tmpdir}/docs",
@@ -74,6 +76,14 @@ module Dictum
   end
 
   ##
+  # Method used to add a new error code.
+  # @param codes_list is an array of hashes representing the code, message and description
+  #
+  def self.error_codes(codes_list)
+    codes_list.each { |error| Documenter.instance.error_code(error) }
+  end
+
+  ##
   # Method that will execute tests and then save the results in the selected format
   #
   def self.document
@@ -88,13 +98,12 @@ module Dictum
   def self.save_to_file
     writer = nil
     output_filename = "#{@config[:output_path]}/#{@config[:output_filename]}"
-    tempfile_path = Documenter.instance.tempfile_path
 
     case @config[:output_format]
     when :markdown
-      writer = MarkdownWriter.new(output_filename, tempfile_path, @config)
+      writer = MarkdownWriter.new(output_filename, TEMPFILE_PATH, @config)
     when :html
-      writer = HtmlWriter.new(output_filename, tempfile_path, @config)
+      writer = HtmlWriter.new(output_filename, TEMPFILE_PATH, @config)
     end
 
     writer.write

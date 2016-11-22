@@ -3,7 +3,13 @@ require 'json'
 require 'nokogiri'
 
 module Dictum
+  # rubocop:disable ClassLength
   class HtmlWriter
+    ERROR_CODE_URL = 'error_codes'.freeze
+    ERROR_CODE_TEXT = 'Error codes'.freeze
+    RESOURCES_TEXT = 'Resources'.freeze
+    BACK_TEXT = 'Back'.freeze
+
     attr_reader :temp_path, :temp_json, :output_dir, :output_file, :header_title
 
     def initialize(output_dir, temp_path, config)
@@ -28,10 +34,14 @@ module Dictum
       index.close
     end
 
+    # rubocop:disable LineLength
+    # rubocop:disable AbcSize
     def write_index
       html = HtmlHelpers.build do |b|
         content = b.jumbotron(b.title(@config[:index_title], 'title'))
+        content += b.title(RESOURCES_TEXT)
         content += b.unordered_list(resources.keys)
+        content += b.link("#{ERROR_CODE_URL}.html", b.subtitle(ERROR_CODE_TEXT)) unless error_codes.empty?
         container = b.container(b.row(content))
         b.html_header(header_title, container, @config[:inline_css])
       end
@@ -42,10 +52,15 @@ module Dictum
       resources.each do |resource_name, information|
         write_page(resource_name, information)
       end
+      write_error_codes_page unless error_codes.empty?
     end
 
     def resources
       temp_json['resources']
+    end
+
+    def error_codes
+      temp_json['error_codes']
     end
 
     def write_page(resource_name, information)
@@ -53,7 +68,7 @@ module Dictum
         content = resource_header_and_endpoints(
           resource_name, information['description'], information['endpoints'], b
         )
-        container = b.container(b.row(content) + b.row(b.button('Back')))
+        container = b.container(b.row(content) + b.row(b.button(BACK_TEXT)))
         b.html_header(header_title, container, @config[:inline_css])
       end
       write_to_file("#{output_dir}/#{resource_name.downcase}.html", html)
@@ -83,10 +98,7 @@ module Dictum
 
     def write_response(endpoint, builder)
       answer = builder.code_block('Status', endpoint['response_status'])
-      answer += write_codeblock(
-        'Response headers', endpoint['response_headers'], builder
-      ) if endpoint['response_headers']
-
+      answer += write_codeblock('Response headers', endpoint['response_headers'], builder) if endpoint['response_headers']
       if endpoint['response_body']
         param = endpoint['response_body'] == 'no_content' ? {} : endpoint['response_body']
         answer += write_codeblock('Response body', param, builder)
@@ -98,6 +110,24 @@ module Dictum
       return unless text && json && builder
       sanitized_json = json.empty? ? {} : json
       builder.code_block(text, JSON.pretty_generate(sanitized_json))
+    end
+
+    def write_error_codes_page
+      html = HtmlHelpers.build do |b|
+        content = b.title(ERROR_CODE_TEXT, 'title')
+        content += b.table(error_code_table_header, error_codes_as_rows)
+        container = b.container(b.row(content) + b.row(b.button(BACK_TEXT)))
+        b.html_header(header_title, container, @config[:inline_css])
+      end
+      write_to_file("#{output_dir}/#{ERROR_CODE_URL}.html", html)
+    end
+
+    def error_code_table_header
+      %w(Code Description Message)
+    end
+
+    def error_codes_as_rows
+      error_codes.map { |a| [a['code'], a['description'], a['message']] }
     end
   end
 end

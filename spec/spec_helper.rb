@@ -1,5 +1,7 @@
 require 'support/coverage'
 require 'dictum'
+require 'simplecov'
+SimpleCov.start
 
 CONFIG = {
   output_format: :markdown,

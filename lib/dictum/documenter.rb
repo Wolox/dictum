@@ -7,13 +7,11 @@ module Dictum
   #
   class Documenter
     include Singleton
-
     attr_reader :data, :tempfile_path
-    TEMPFILE_NAME = 'dictum_temp.json'.freeze
 
     def initialize
       reset_data
-      @tempfile_path = "#{Dir.tmpdir}/#{TEMPFILE_NAME}"
+      @tempfile_path = Dictum::TEMPFILE_PATH
     end
 
     def resource(arguments = {})
@@ -36,9 +34,18 @@ module Dictum
       update_temp
     end
 
+    def error_code(error = {})
+      return if error.nil? || !error.is_a?(Hash)
+      code = error[:code]
+      return if code.nil?
+      error_codes << { code: code, message: error[:message], description: error[:description] }
+      update_temp
+    end
+
     def reset_data
       @data = {
-        resources: {}
+        resources: {},
+        error_codes: []
       }
     end
 
@@ -46,6 +53,10 @@ module Dictum
 
     def resources
       @data[:resources]
+    end
+
+    def error_codes
+      @data[:error_codes]
     end
 
     def update_temp

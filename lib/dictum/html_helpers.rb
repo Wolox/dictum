@@ -1,4 +1,5 @@
 module Dictum
+  # rubocop:disable ClassLength
   class HtmlHelpers
     BOOTSTRAP_JS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'.freeze
     BOOTSTRAP_CSS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'.freeze
@@ -110,6 +111,29 @@ module Dictum
           answer += " #{key}='#{value}'"
         end
         answer += ">#{content}</#{name}>"
+      end
+
+      def table(headers, rows)
+        return '' unless headers
+        answer = table_headers(headers)
+        answer += table_rows(rows)
+        tag('table', answer, class: 'table')
+      end
+
+      private
+
+      def table_headers(headers)
+        answer = ''
+        headers.each { |header| answer += tag('th', header) }
+        tag('tr', answer)
+      end
+
+      def table_rows(rows)
+        answer = ''
+        rows.each do |row|
+          answer += tag('tr', tag('td', row[0]) + tag('td', row[1]) + tag('td', row[2]))
+        end
+        answer
       end
     end
   end

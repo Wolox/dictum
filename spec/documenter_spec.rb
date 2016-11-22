@@ -16,7 +16,8 @@ describe 'Dictum::Documenter' do
     it 'adds the resource internally' do
       subject.resource(arguments)
       expect(subject.data).to eq(
-        resources: { resource.to_s => { description: resource_description, endpoints: [] } }
+        resources: { resource.to_s => { description: resource_description, endpoints: [] } },
+        error_codes: []
       )
     end
 
@@ -93,7 +94,8 @@ describe 'Dictum::Documenter' do
                   response_body: response_body }
               ]
             }
-          }
+          },
+          error_codes: []
         )
       end
 
@@ -125,7 +127,8 @@ describe 'Dictum::Documenter' do
                     response_body: nil }
                 ]
               }
-            }
+            },
+            error_codes: []
           )
         end
       end
@@ -154,7 +157,8 @@ describe 'Dictum::Documenter' do
                   response_body: response_body }
               ]
             }
-          }
+          },
+          error_codes: []
         )
       end
     end

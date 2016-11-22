@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - dictum.gemspec
+    - lib/tasks/dictum.rake
     - spec/spec_helper.rb
 
 Documentation:
