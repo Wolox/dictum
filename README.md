@@ -128,6 +128,25 @@ And voilà, Dictum will create a document like this in '/docs/Documentation' (se
     "no_content"
     ```
 
+# Error codes
+
+Dictum supports the documentation of the custom error codes of your API. In order to do this you need to send an array of errors with a specific format, like the following:
+
+```ruby
+ERROR_CODES = [
+  {
+    code: 1234,
+    message: 'This is a short description of the error, usually what is returned in the body of the response.',
+    description: 'This is a larger and more detailed description of the error, usually you want to show this only in the documentation'
+  }
+]
+
+# spec_helper.rb
+Dictum.error_codes(ERROR_CODES)
+```
+
+We recommend you to define your error codes in a module or class with useful methods like get(error_code) and get_all, [like this one](https://gist.github.com/alebian/1b925151b6a6acd3e4bb2ef4b5148324).
+
 # Advanced usage
 
 If you pay attention to the basic usage, you will notice that it is a lot of boilerplate if your API has a lot of endpoints, this is not DRY. Luckily you can work around it using some Rspec tricks:
