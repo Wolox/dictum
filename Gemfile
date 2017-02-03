@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in crf.gemspec
 gemspec
 
-gem 'rake', '~> 11.1'
-gem 'json', '~> 1.8'
+gem 'rake', '~> 12.0'
+gem 'json', '~> 2.0'
 
 group :test do
   gem 'simplecov'
