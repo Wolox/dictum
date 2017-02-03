@@ -10,6 +10,40 @@ describe 'Dictum::Documenter' do
     subject.reset_data
   end
 
+  describe '#error_code' do
+    let(:error_code) { { code: '101', message: 'test message', description: 'test description' } }
+
+    it 'adds the error internally' do
+      subject.error_code(error_code)
+      expect(subject.data).to eq(
+        resources: {},
+        error_codes: [
+          {
+            code: error_code[:code],
+            message: error_code[:message],
+            description: error_code[:description]
+          }
+        ]
+      )
+    end
+
+    context 'if the data is missing' do
+      it 'adds the error internally' do
+        subject.error_code({})
+        expect(subject.data).to eq(
+          resources: {},
+          error_codes: [
+            {
+              code: Dictum::MISSING_MESSAGE,
+              message: '',
+              description: ''
+            }
+          ]
+        )
+      end
+    end
+  end
+
   describe '#resource' do
     let(:arguments) { { name: resource, description: resource_description } }
 

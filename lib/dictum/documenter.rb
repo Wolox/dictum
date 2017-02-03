@@ -1,5 +1,6 @@
 require 'singleton'
 require 'tmpdir'
+require_relative 'constants'
 
 module Dictum
   ##
@@ -36,9 +37,12 @@ module Dictum
 
     def error_code(error = {})
       return if error.nil? || !error.is_a?(Hash)
-      code = error[:code]
-      return if code.nil?
-      error_codes << { code: code, message: error[:message], description: error[:description] }
+      error_hash = {
+        code: error[:code] || Dictum::MISSING_MESSAGE,
+        message: error[:message] || '',
+        description: error[:description] || ''
+      }
+      error_codes << error_hash
       update_temp
     end
 

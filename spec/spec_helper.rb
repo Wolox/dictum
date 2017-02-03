@@ -43,6 +43,9 @@ def create_test_json
                       request_path_parameters: test_hash, request_body_parameters: test_hash,
                       response_status: 200, response_headers: test_hash, response_body: test_hash)
 
+  documenter.error_code({ code: '101', message: test_string, description: test_string })
+  documenter.error_code({ code: '102', message: test_string, description: test_string })
+
   FileUtils.copy(documenter.tempfile_path, './spec/temp')
 end
 

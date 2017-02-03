@@ -3,4 +3,5 @@ Dictum.configure do |config|
   config.root_path = Rails.root
   config.output_filename = 'Documentation'
   config.output_format = :markdown
+  config.index_title = 'MYAPP API documentation'
 end

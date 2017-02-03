@@ -16,6 +16,7 @@ module Dictum
       @output_file = File.open(output_path, 'a+')
       write_index
       write_temp_path
+      write_error_codes
       output_file.close
     end
 
@@ -35,6 +36,17 @@ module Dictum
         output_file.puts "#{information['description']}\n\n"
         write_endpoints(information['endpoints'])
       end
+    end
+
+    def write_error_codes
+      return if error_codes.empty?
+      output_file.puts "# Error codes"
+      output_file.puts "|Code|Message|Description|"
+      output_file.puts "|----|----|----|"
+      error_codes.each do |error|
+        output_file.puts "|#{error['code']}|#{error['message']}|#{error['description']}|"
+      end
+      output_file.puts "\n"
     end
 
     def write_endpoints(endpoints)
@@ -69,6 +81,10 @@ module Dictum
       sanitized_contents = contents.empty? ? {} : contents
       output_file.puts "\#\#\# #{subtitle}:"
       output_file.puts "```json\n#{JSON.pretty_generate(sanitized_contents)}\n```\n\n"
+    end
+
+    def error_codes
+      temp_json['error_codes']
     end
   end
 end
