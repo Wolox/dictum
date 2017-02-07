@@ -15,3 +15,6 @@ FrozenStringLiteralComment:
 
 Metrics/AbcSize:
   Max: 15.3
+
+Metrics/BlockLength:
+  Enabled: false

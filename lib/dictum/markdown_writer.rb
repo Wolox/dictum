@@ -38,11 +38,12 @@ module Dictum
       end
     end
 
+    # rubocop:disable AbcSize
     def write_error_codes
       return if error_codes.empty?
-      output_file.puts "# Error codes"
-      output_file.puts "|Code|Message|Description|"
-      output_file.puts "|----|----|----|"
+      output_file.puts '# Error codes'
+      output_file.puts '|Code|Message|Description|'
+      output_file.puts '|----|----|----|'
       error_codes.each do |error|
         output_file.puts "|#{error['code']}|#{error['message']}|#{error['description']}|"
       end
