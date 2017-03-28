@@ -70,19 +70,19 @@ describe 'Dictum::Documenter' do
       let(:resource) { nil }
 
       it 'does not add anything' do
-        expect { subject.resource }.not_to change { subject.data }
+        expect { subject.resource }.not_to(change { subject.data })
       end
 
       it 'does not add anything with nil' do
-        expect { subject.resource(nil) }.not_to change { subject.data }
+        expect { subject.resource(nil) }.not_to(change { subject.data })
       end
 
       it 'does not add anything without name' do
-        expect { subject.resource({}) }.not_to change { subject.data }
+        expect { subject.resource({}) }.not_to(change { subject.data })
       end
 
       it 'does not add anything with no name' do
-        expect { subject.resource(arguments) }.not_to change { subject.data }
+        expect { subject.resource(arguments) }.not_to(change { subject.data })
       end
     end
   end
@@ -211,12 +211,12 @@ describe 'Dictum::Documenter' do
     context 'when not sending the mandatory parameters' do
       it 'does not add anything without endpoint' do
         arguments[:endpoint] = nil
-        expect { subject.endpoint(arguments) }.not_to change { subject.data }
+        expect { subject.endpoint(arguments) }.not_to(change { subject.data })
       end
 
       it 'does not add anything without resource' do
         arguments[:resource] = nil
-        expect { subject.endpoint(arguments) }.not_to change { subject.data }
+        expect { subject.endpoint(arguments) }.not_to(change { subject.data })
       end
     end
   end
