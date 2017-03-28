@@ -153,23 +153,27 @@ If you pay attention to the basic usage, you will notice that it is a lot of boi
 
 ```ruby
 # spec/rails_helper.rb
+
+DEFAULT_REQUEST_HEADERS = {
+  'AUTHORIZATION' => 'user_token',
+  'Content-Type' => 'application/json',
+  'Accept' => 'application/json'
+}
+
 RSpec.configure do |config|
   config.after(:each) do |test|
     if test.metadata[:dictum]
       Dictum.endpoint(
-      Dictum.endpoint(
-        resource: test.metadata[:described_class].to_s.gsub('V1::', '').gsub('Controller', ''),
+        resource: test.metadata[:described_class].split('::').last.gsub('Controller', ''),
         endpoint: request.fullpath,
         http_verb: request.env['REQUEST_METHOD'],
         description: test.metadata[:dictum_description],
-        request_headers: { 'AUTHORIZATION' => 'user_token',
-                           'Content-Type' => 'application/json',
-                           'Accept' => 'application/json' },
+        request_headers: DEFAULT_REQUEST_HEADERS,
         request_path_parameters: request.env['action_dispatch.request.path_parameters'].except(:controller, :action),
         request_body_parameters: request.env['action_dispatch.request.parameters'].except('controller', 'action'),
         response_headers: response.headers,
         response_status: response.status,
-        response_body: response_body
+        response_body: ActiveSupport::JSON.decode(response.body)
       )
     end
   end
