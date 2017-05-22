@@ -7,7 +7,7 @@ This is MyResource description.
 ## POST /api/v1/my_resource
 
 ### Description:
-Some description of the endpoint.
+This optional property exists to add a description to the endpoint.
 
 ### Request headers:
 ```json
