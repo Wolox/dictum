@@ -9,7 +9,7 @@ RSpec.configure do |config|
   config.after(:each) do |test|
     if test.metadata[:dictum]
     Dictum.endpoint(
-      resource: test.metadata[:described_class].split('::').last.gsub('Controller', ''),
+      resource: test.metadata[:described_class].to_s.split('::').last.gsub('Controller', ''),
       endpoint: request.fullpath,
       http_verb: request.env['REQUEST_METHOD'],
       description: test.metadata[:dictum_description],
