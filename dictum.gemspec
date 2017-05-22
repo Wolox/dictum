@@ -21,9 +21,13 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec)/})
 
   spec.add_dependency 'nokogiri', '>= 1.3.3'
+  spec.add_dependency 'json', '~> 2.0'
+  spec.add_dependency 'rake', '~> 12.0'
 
   spec.add_development_dependency 'bundler', '>= 1.3.0', '< 2.0'
   spec.add_development_dependency 'rspec', '~> 3.4', '>= 3.4.0'
   spec.add_development_dependency 'byebug', '~> 8.0', '>= 8.0.0' if RUBY_VERSION >= '2.0.0'
   spec.add_development_dependency 'rubocop', '~> 0.48', '>= 0.48.0'
+  spec.add_development_dependency 'codeclimate-test-reporter', '~> 1.0.0'
+  spec.add_development_dependency 'simplecov'
 end

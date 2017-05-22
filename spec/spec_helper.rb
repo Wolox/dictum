@@ -2,6 +2,7 @@ require 'support/coverage'
 require 'dictum'
 require 'simplecov'
 SimpleCov.start
+require 'byebug'
 
 CONFIG = {
   output_format: :markdown,
