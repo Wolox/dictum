@@ -123,7 +123,7 @@ module Dictum
     end
 
     def error_code_table_header
-      %w(Code Description Message)
+      %w[Code Description Message]
     end
 
     def error_codes_as_rows
