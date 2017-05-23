@@ -4,15 +4,20 @@ describe 'Dictum::MarkdownWriter' do
   let(:temp_path) { './spec/temp/dictum_temp.json' }
   let(:output_path) { './spec/temp/test' }
 
-  subject(:documenter) { Dictum::MarkdownWriter.new(output_path, temp_path, CONFIG) }
+  context 'when previous documentation exists' do
+    before(:each) do
+      File.open(output_path + '.md', 'a').close
+      Dictum::MarkdownWriter.new(output_path, temp_path, CONFIG)
+    end
 
-  before(:all) do
-    File.delete('./spec/temp/test.md') if File.exist?('./spec/temp/test.md')
+    it 'deletes the old documentation file' do
+      expect(File.exist?(output_path + '.md')).to be_falsy
+    end
   end
 
   describe '#write' do
     before(:each) do
-      documenter.write
+      Dictum::MarkdownWriter.new(output_path, temp_path, CONFIG).write
     end
 
     it 'creates the markdown file' do

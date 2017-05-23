@@ -6,7 +6,7 @@ module Dictum
 
     def initialize(output_path, temp_path, config)
       @output_path = "#{output_path}.md"
-      File.delete(output_path) if File.exist?(output_path)
+      File.delete(@output_path) if File.exist?(@output_path)
       @temp_path = temp_path
       @temp_json = JSON.parse(File.read(temp_path))
       @config = config

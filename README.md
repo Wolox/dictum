@@ -1,11 +1,11 @@
-# Dictum - Document your Rails APIs
+# Dictum
 [![Gem Version](https://badge.fury.io/rb/dictum.svg)](https://badge.fury.io/rb/dictum)
 [![Dependency Status](https://gemnasium.com/badges/github.com/Wolox/dictum.svg)](https://gemnasium.com/github.com/Wolox/dictum)
 [![Build Status](https://travis-ci.org/Wolox/dictum.svg)](https://travis-ci.org/Wolox/dictum)
 [![Code Climate](https://codeclimate.com/github/Wolox/dictum/badges/gpa.svg)](https://codeclimate.com/github/Wolox/dictum)
 [![Test Coverage](https://codeclimate.com/github/Wolox/dictum/badges/coverage.svg)](https://codeclimate.com/github/Wolox/dictum/coverage)
-[![Issue Count](https://codeclimate.com/github/Wolox/dictum/badges/issue_count.svg)](https://codeclimate.com/github/Wolox/dictum)
-[![Inline docs](http://inch-ci.org/github/Wolox/dictum.svg)](http://inch-ci.org/github/Wolox/dictum)
+
+Create automatic documentation of your Rails APIs.
 
 ## Installation
 
@@ -23,26 +23,15 @@ Or install it yourself as:
 
     $ gem install dictum
 
-## Basic usage
+## Usage
 
-First run:
+First, run:
 
     $ bundle exec rake dictum:configure [PATH_TO_HELPER_FILE]
 
-This will create a basic Rspec configuration in 'spec/support/spec_helper.rb' or in PATH_TO_HELPER_FILE. Also it will create a configuration file inside /config/initializers/dictum.rb
+This will create a basic Rspec configuration for Dictum in `spec/support/spec_helper.rb` or `PATH_TO_HELPER_FILE`, along with Dictum's initializer file (`/config/initializers/dictum.rb`).
 
-```ruby
-# /config/initializers/dictum.rb
-Dictum.configure do |config|
-  config.output_path = Rails.root.join('docs')
-  config.root_path = Rails.root
-  config.output_filename = 'Documentation'
-  config.output_format = :markdown
-  config.index_title = 'My Documentation Title'
-end
-```
-
-Then you can use Dictum in the most verbose and fully customizable way like this in your tests:
+To document an endpoint, you have to append `dictum: true` to your controller's `it` statements, as shown below:
 
 ```ruby
 # spec/controllers/my_resource_controller_spec.rb
@@ -56,22 +45,8 @@ describe V1::MyResourceController do
 
   describe '#some_method' do
     context 'some context for my resource' do
-      it 'returns status ok' do
+      it 'returns status ok', dictum: true, dictum_description: 'This optional property exists to add a description to the endpoint.' do
         get :index
-        Dictum.endpoint(
-          resource: 'MyResource',
-          endpoint: '/api/v1/my_resource/:id',
-          http_verb: 'POST',
-          description: 'Some description of the endpoint.',
-          request_headers: { 'AUTHORIZATION' => 'user_token',
-                             'Content-Type' => 'application/json',
-                             'Accept' => 'application/json' },
-          request_path_parameters: { id: 1, page: 1 },
-          request_body_parameters: { some: 'parameter' },
-          response_headers: { 'some_header' => 'some_header_value' },
-          response_status: response.status,
-          response_body: response_body
-        )
         expect(response_status).to eq(200)
       end
     end
@@ -83,50 +58,7 @@ Then execute:
 
     $ bundle exec rake dictum:document
 
-And voilà, Dictum will create a document like this in '/docs/Documentation' (see [example.md](https://github.com/Wolox/dictum/blob/master/example.md)):
-
-    # My Documentation Title
-    - MyResource
-
-    # MyResource
-    This is MyResource description.
-
-    ## POST /api/v1/my_resource
-
-    ### Description:
-    Some description of the endpoint.
-
-    ### Request headers:
-    ```json
-    {
-      "AUTHORIZATION" : "user_token",
-      "Content-Type" : "application/json",
-      "Accept" : "application/json"
-    }
-    ```
-
-    ### Path parameters:
-    ```json
-    { "id": 1, "page": 1 }
-    ```
-
-    ### Body parameters:
-    ```json
-    { "some": "parameter" }
-    ```
-
-    ### Response headers:
-    ```json
-    { "some_header": "some_header_value" }
-    ```
-
-    ### Response status:
-    200
-
-    ### Response body:
-    ```json
-    "no_content"
-    ```
+And voilà, Dictum will create a document like [this](https://github.com/Wolox/dictum/blob/master/example.md) in `/docs/Documentation.md`.
 
 # Error codes
 
@@ -147,40 +79,10 @@ Dictum.error_codes(ERROR_CODES)
 
 We recommend you to define your error codes in a module or class with useful methods like get(error_code) and get_all, [like this one](https://gist.github.com/alebian/1b925151b6a6acd3e4bb2ef4b5148324).
 
-# Advanced usage
 
-If you pay attention to the basic usage, you will notice that it is a lot of boilerplate if your API has a lot of endpoints, this is not DRY. Luckily you can work around it using some Rspec tricks:
+## Descriptive usage
 
-```ruby
-# spec/rails_helper.rb
-
-DEFAULT_REQUEST_HEADERS = {
-  'AUTHORIZATION' => 'user_token',
-  'Content-Type' => 'application/json',
-  'Accept' => 'application/json'
-}
-
-RSpec.configure do |config|
-  config.after(:each) do |test|
-    if test.metadata[:dictum]
-      Dictum.endpoint(
-        resource: test.metadata[:described_class].split('::').last.gsub('Controller', ''),
-        endpoint: request.fullpath,
-        http_verb: request.env['REQUEST_METHOD'],
-        description: test.metadata[:dictum_description],
-        request_headers: DEFAULT_REQUEST_HEADERS,
-        request_path_parameters: request.env['action_dispatch.request.path_parameters'].except(:controller, :action),
-        request_body_parameters: request.env['action_dispatch.request.parameters'].except('controller', 'action'),
-        response_headers: response.headers,
-        response_status: response.status,
-        response_body: ActiveSupport::JSON.decode(response.body)
-      )
-    end
-  end
-end
-```
-
-A file similar (and more complete) to that one is created when you run the rake dictum:configure task.
+Also, if you prefer to have more control over your endpoints documentation, you can use Dictum in the most verbose and fully customizable way, as shown below:
 
 ```ruby
 # spec/controllers/my_resource_controller_spec.rb
@@ -194,17 +96,28 @@ describe V1::MyResourceController do
 
   describe '#some_method' do
     context 'some context for my resource' do
-      it 'returns status ok', dictum: true, dictum_description: 'Some description of the endpoint.' do
+      it 'returns status ok' do
         get :index
+        Dictum.endpoint(
+          resource: 'MyResource',
+          endpoint: '/api/v1/my_resource/:id',
+          http_verb: 'POST',
+          description: 'This optional property exists to add a description to the endpoint.',
+          request_headers: { 'AUTHORIZATION' => 'user_token',
+                             'Content-Type' => 'application/json',
+                             'Accept' => 'application/json' },
+          request_path_parameters: { id: 1, page: 1 },
+          request_body_parameters: { some: 'parameter' },
+          response_headers: { 'some_header' => 'some_header_value' },
+          response_status: response.status,
+          response_body: response_body
+        )
         expect(response_status).to eq(200)
       end
     end
   end
 end
 ```
-
-This is how your controller test should look now, much better.
-
 # Dynamic HTML documentation
 
 So far so good, but your team needs to read the documentation everytime you update it, and sending the documentation file to them doesn't seem too practical. Instead you can use the HTML version of Dictum and generate static views with the content. Here is a very basic example of what you can do to generate the views and routes dynamycally:
@@ -268,7 +181,7 @@ This project is maintained by [Alejandro Bezdjian](https://github.com/alebian) a
 
 **Dictum** is available under the MIT [license](https://raw.githubusercontent.com/Wolox/dictum/master/LICENSE.md).
 
-    Copyright (c) 2016 Alejandro Bezdjian, aka alebian
+    Copyright (c) 2017 Wolox
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal

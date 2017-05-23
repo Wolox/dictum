@@ -75,7 +75,7 @@ describe 'Dictum::HtmlHelpers' do
   end
 
   describe '#unordered_list' do
-    let(:elements) { %w(test test) }
+    let(:elements) { %w[test test] }
 
     it 'returns the correct unordered list tags' do
       expect(subject.unordered_list(elements)).to eq(
