@@ -31,7 +31,7 @@ First, run:
 
 This will create a basic Rspec configuration for Dictum in `spec/support/spec_helper.rb` or `PATH_TO_HELPER_FILE`, along with Dictum's initializer file (`/config/initializers/dictum.rb`).
 
-To document an endpoint, you have to append `dictum: true` to your controllers tests `it` statements, as shown below:
+To document an endpoint, you have to append `dictum: true` to your controller's `it` statements, as shown below:
 
 ```ruby
 # spec/controllers/my_resource_controller_spec.rb
