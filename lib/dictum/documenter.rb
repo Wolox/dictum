@@ -21,7 +21,7 @@ module Dictum
       description = arguments[:description]
       return if name.nil?
       resources[name] ||= {}
-      resources[name][:description] = description if description
+      resources[name][:description] = description if description && description.is_a?(String)
       resources[name][:endpoints] ||= []
       update_temp
     end
