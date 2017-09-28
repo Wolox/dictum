@@ -25,7 +25,7 @@ describe 'Dictum::HtmlWriter' do
 
     it 'creates the resources files with correct names' do
       json = JSON.parse(File.open(temp_path).read)
-      json['resources'].each do |resource, _information|
+      json['resources'].each_key do |resource|
         expect(File.exist?("./spec/temp/docs/#{resource.downcase}.html")).to be_truthy
       end
     end

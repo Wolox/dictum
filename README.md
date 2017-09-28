@@ -45,7 +45,7 @@ describe V1::MyResourceController do
 
   describe '#some_method' do
     context 'some context for my resource' do
-      it 'returns status ok', dictum: true, dictum_description: 'This optional property exists to add a description to the endpoint.' do
+      it 'returns status ok', dictum: 'This property exists to add a description to the endpoint. If you do not want a description, just set it to true' do
         get :index
         expect(response_status).to eq(200)
       end

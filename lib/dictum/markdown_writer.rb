@@ -24,7 +24,7 @@ module Dictum
 
     def write_index
       output_file.puts "# #{@config[:index_title]}"
-      @temp_json['resources'].each do |resource_name, _information|
+      @temp_json['resources'].each_key do |resource_name|
         output_file.puts "- #{resource_name}"
       end
       output_file.puts "\n"

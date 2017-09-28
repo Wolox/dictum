@@ -12,7 +12,7 @@ RSpec.configure do |config|
       resource: test.metadata[:described_class].to_s.split('::').last.gsub('Controller', ''),
       endpoint: request.fullpath,
       http_verb: request.env['REQUEST_METHOD'],
-      description: test.metadata[:dictum_description],
+      description: test.metadata[:dictum],
       request_headers: DEFAULT_REQUEST_HEADERS,
       request_path_parameters: request.env['action_dispatch.request.path_parameters'].except(:controller, :action),
       request_body_parameters: request.env['action_dispatch.request.parameters'].except('controller', 'action'),
