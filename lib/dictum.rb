@@ -90,7 +90,7 @@ module Dictum
     Dir.mkdir(@config[:output_path]) unless Dir.exist?(@config[:output_path])
     Documenter.instance.reset_data
 
-    system "bundle exec rspec #{@config[:root_path]}" if @config[:test_suite] == :rspec
+    system "bundle exec rspec #{@config[:root_path]} --tag dictum" if @config[:test_suite] == :rspec
 
     save_to_file
   end
