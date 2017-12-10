@@ -2,7 +2,6 @@ require 'dictum/version'
 require 'dictum/documenter'
 require 'dictum/markdown_writer'
 require 'dictum/html_writer'
-require 'dictum/html_helpers'
 require 'tmpdir'
 
 module Dictum
@@ -90,7 +89,9 @@ module Dictum
     Dir.mkdir(@config[:output_path]) unless Dir.exist?(@config[:output_path])
     Documenter.instance.reset_data
 
-    system "bundle exec rspec #{@config[:root_path]} --tag dictum" if @config[:test_suite] == :rspec
+    if @config[:test_suite] == :rspec
+      system "bundle exec rspec #{@config[:root_path]} --tag dictum"
+    end
 
     save_to_file
   end
