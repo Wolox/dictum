@@ -38,8 +38,7 @@ module Dictum
       end
     end
 
-    # rubocop:disable AbcSize
-    def write_error_codes
+    def write_error_codes # rubocop:disable AbcSize
       return if error_codes.empty?
       output_file.puts '# Error codes'
       output_file.puts '|Code|Message|Description|'
