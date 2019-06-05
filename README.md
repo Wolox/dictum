@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/Wolox/dictum.svg)](https://travis-ci.org/Wolox/dictum)
 [![Code Climate](https://codeclimate.com/github/Wolox/dictum/badges/gpa.svg)](https://codeclimate.com/github/Wolox/dictum)
 [![Test Coverage](https://codeclimate.com/github/Wolox/dictum/badges/coverage.svg)](https://codeclimate.com/github/Wolox/dictum/coverage)
+[![Open Source Helpers](https://www.codetriage.com/wolox/dictum/badges/users.svg)](https://www.codetriage.com/wolox/dictum)
 
 Create automatic documentation of your Rails APIs.
 
