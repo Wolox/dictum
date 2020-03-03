@@ -1,31 +1,10 @@
 language: ruby
-rvm:
-  - 2.1
-  - 2.2
-  - 2.2.4
-  - 2.3.0
 
-install:
-  - gem install bundler
-  - bundle install --retry=3
+sudo: false
+
+cache:
+  directories:
+    - vendor/bundle
 
 script:
-  - bundle exec rspec
-  - bundle exec rubocop -R --format simple
-
-addons:
-    code_climate:
-        repo_token: b228ad9d03e7d830d589aed174b9fe0ab3057dc045a2b3360666e7a7891634ff
-
-os:
-  - linux
-  - osx
-
-matrix:
-  exclude:
-    - rvm: 2.2
-      os: osx
-    - rvm: 2.2.4
-      os: osx
-    - rvm: 2.3.0
-      os: osx
+  - true
