@@ -11,7 +11,7 @@ Dictum will be **Deprecate** because is replaced to [Fictium](https://github.com
 
 * All issues and PRs will be closed and the most important and relevant will be created in Fictium.
 
-* The documentation is available here [doc](https://raw.githubusercontent.com/Wolox/dictum/master/docs/documentation.md)
+* The documentation is available here [doc](https://github.com/Wolox/dictum/blob/master/docs/documentation.md)
 
 ![Wolox](https://raw.githubusercontent.com/Wolox/press-kit/master/logos/logo_banner.png)
 
